@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="articles">
+    <div class="mx-auto justify-center max-w-7xl">
+        <div class="flex items-center justify-between mb-6 max-w-7xl mx-auto">
+            <h3 class="text-2xl font-bold flex items-center gap-2">
+                <span class="px-3 py-1 rounded-md">Featured articles</span>
+            </h3>
+            <a
+                    href="#"
+                    class="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 transition-colors"
+            >
+                View all articles &gt;
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto">
+            <!-- COT TRÁI: Bài viết nổi bật lớn -->
+            <div
+                    class="lg:col-span-6 bg-white rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col justify-between group"
+            >
+                <div>
+                    <!-- Hình ảnh đại diện -->
+                    <div class="w-full h-64 sm:h-80 overflow-hidden relative">
+                        <img
+                                src="https://via.placeholder.com/600x400/e2e8f0/1e293b?text=GoTymeX+AI"
+                                alt="GoTymeX AI"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                    </div>
+
+                    <!-- Nội dung bài viết -->
+                    <div class="p-6">
+                        <h4
+                                class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-snug"
+                        >
+                            Bài học từ GoTymeX để AI tạo ra giá trị dài hạn
+                        </h4>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                            Khi AI bước vào các quy trình cốt lõi, doanh nghiệp không chỉ
+                            đối mặt với những thách thức về công nghệ mà còn phải giải
+                            quyết vấn đề về dữ liệu, quy trình, quản trị thay đổi và phát
+                            triển nhân sự.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer bài viết lớn: Link đọc tiếp + Dots slider -->
+                <div class="px-6 pb-6 pt-0 flex items-center justify-between">
+                    <a
+                            href="#"
+                            class="text-blue-600 font-semibold text-sm hover:underline flex items-center gap-1"
+                    >
+                        Start reading &gt;
+                    </a>
+                    <!-- Chấm tròn Slide Indicator -->
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: Lưới 4 bài viết nhỏ (2x2) -->
+            <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Card nhỏ 1 -->
+                <div
+                        class="bg-white rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow p-3.5 flex flex-col justify-between group"
+                >
+                    <div>
+                        <div class="w-full h-36 rounded-xl overflow-hidden mb-3">
+                            <img
+                                    src="https://via.placeholder.com/300x200/1e293b/ffffff?text=MatchScore"
+                                    alt="MatchScore"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                        <h5
+                                class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-3 group-hover:text-blue-600 transition-colors"
+                        >
+                            MatchScore dành cho Nhà tuyển dụng IT: Công cụ AI đo độ phù
+                            hợp...
+                        </h5>
+                    </div>
+                    <a
+                            href="#"
+                            class="text-blue-600 font-semibold text-xs hover:underline flex items-center gap-1 mt-auto"
+                    >
+                        Start reading &gt;
+                    </a>
+                </div>
+
+                <!-- Card nhỏ 2 -->
+                <div
+                        class="bg-white rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow p-3.5 flex flex-col justify-between group"
+                >
+                    <div>
+                        <div class="w-full h-36 rounded-xl overflow-hidden mb-3">
+                            <img
+                                    src="https://via.placeholder.com/300x200/dc2626/ffffff?text=Luckydraw+500K"
+                                    alt="Luckydraw"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                        <h5
+                                class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-3 group-hover:text-blue-600 transition-colors"
+                        >
+                            ITviec công bố danh sách trúng thưởng kỳ quay số đầu tiên
+                            từ...
+                        </h5>
+                    </div>
+                    <a
+                            href="#"
+                            class="text-blue-600 font-semibold text-xs hover:underline flex items-center gap-1 mt-auto"
+                    >
+                        Start reading &gt;
+                    </a>
+                </div>
+
+                <!-- Card nhỏ 3 -->
+                <div
+                        class="bg-white rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow p-3.5 flex flex-col justify-between group"
+                >
+                    <div>
+                        <div class="w-full h-36 rounded-xl overflow-hidden mb-3">
+                            <img
+                                    src="https://via.placeholder.com/300x200/0f172a/ffffff?text=Thoughtworks"
+                                    alt="Thoughtworks"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                        <h5
+                                class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-3 group-hover:text-blue-600 transition-colors"
+                        >
+                            First Responder: Khi AI trở thành người đầu tiên đi tìm nguyên
+                            nhân...
+                        </h5>
+                    </div>
+                    <a
+                            href="#"
+                            class="text-blue-600 font-semibold text-xs hover:underline flex items-center gap-1 mt-auto"
+                    >
+                        Start reading &gt;
+                    </a>
+                </div>
+
+                <!-- Card nhỏ 4 -->
+                <div
+                        class="bg-white rounded-2xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow p-3.5 flex flex-col justify-between group"
+                >
+                    <div>
+                        <div class="w-full h-36 rounded-xl overflow-hidden mb-3">
+                            <img
+                                    src="https://via.placeholder.com/300x200/0284c7/ffffff?text=Cloud+Thinker"
+                                    alt="Cloud Thinker"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        </div>
+                        <h5
+                                class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-3 group-hover:text-blue-600 transition-colors"
+                        >
+                            Tối ưu hóa quy mô Cloud: Vì sao doanh nghiệp cần "Thin
+                            Platform"...
+                        </h5>
+                    </div>
+                    <a
+                            href="#"
+                            class="text-blue-600 font-semibold text-xs hover:underline flex items-center gap-1 mt-auto"
+                    >
+                        Start reading &gt;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

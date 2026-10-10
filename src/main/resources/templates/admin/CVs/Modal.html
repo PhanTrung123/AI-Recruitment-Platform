@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/AdminLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="addApplicationModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+
+    <form class="w-full max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center shrink-0">
+            <h2 class="text-lg font-bold text-slate-800">
+                Thêm Mới Hồ Sơ Ứng Tuyển (Add Application)
+            </h2>
+            <button type="button" class="text-slate-400 hover:text-red-500 transition-colors">
+                <i class="ph ph-x text-xl font-bold"></i>
+            </button>
+        </div>
+
+        <div class="p-6 space-y-5 overflow-y-auto flex-1">
+
+            <div>
+                <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                    Chọn vị trí tuyển dụng (Job Title) <span class="text-red-500">*</span>
+                </label>
+                <select required class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                    <option value="">-- Chọn công việc ứng tuyển --</option>
+                    <option value="1">Senior Java Developer - FPT Software</option>
+                    <option value="2">Frontend React Engineer - VNG Corporation</option>
+                    <option value="3">UI/UX Designer Intern - Viettel Group</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                    Chọn ứng viên / Hồ sơ CV (Candidate) <span class="text-red-500">*</span>
+                </label>
+                <select required class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                    <option value="">-- Chọn hồ sơ ứng viên --</option>
+                    <option value="1">Jane Smith (jane.smith@email.com - CV.pdf)</option>
+                    <option value="2">John Doe (johndoe@company.com - CV.pdf)</option>
+                    <option value="3">Quang Trung (quangtrung@gmail.com - Portfolio.pdf)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                    Trạng thái xét duyệt (Status) <span class="text-red-500">*</span>
+                </label>
+                <select required class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                    <option value="PENDING" selected>Pending (Đang chờ)</option>
+                    <option value="ACCEPTED">Accepted (Đã duyệt)</option>
+                    <option value="REJECTED">Rejected (Từ chối)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                    Ngày nộp hồ sơ (Applied Date) <span class="text-red-500">*</span>
+                </label>
+                <input type="date" required
+                       class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer" />
+            </div>
+        </div>
+
+        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3 shrink-0">
+            <button type="button" class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+                Cancel
+            </button>
+            <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition-colors cursor-pointer">
+                Add
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

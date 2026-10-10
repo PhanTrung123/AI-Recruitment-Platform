@@ -1,0 +1,45 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <title>Hire AI</title>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body class="h-screen bg-[#F8FAFC] text-slate-800 overflow-hidden text-sm">
+
+<div class="flex h-full">
+
+    <!-- MENU -->
+    <div th:replace="admin/fragments/Menu::menu"></div>
+
+    <!-- MAIN -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <!-- HEADER -->
+        <div th:replace="admin/fragments/Header::header"></div>
+
+        <!-- CONTENT -->
+        <div layout:fragment="content" class="flex-1 overflow-y-auto p-6 max-lg:p-5 max-md:p-4">
+        </div>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/AdminLayout.js}"></script>
+
+</body>
+</html>

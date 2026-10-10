@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout/ClientLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle} + ' | RecruitOS'">Hồ sơ ITviec | RecruitOS</title>
+</head>
+<body>
+<div layout:fragment="content" class="min-h-screen py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-start gap-6">
+            <div th:replace="client/dashboard/fragments/Sidebar :: sidebar"></div>
+
+            <main class="flex-1 min-w-0">
+                <div class="grid max-w-full gap-6 lg:grid-cols-12">
+                    <div class="flex flex-col gap-6 lg:col-span-7">
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-6 shadow-sm ">
+                            <div class="flex  gap-4 flex-1">
+                                <div class="h-[80px] w-[80px] rounded-full flex items-center justify-center shadow-sm overflow-hidden">
+                                    <img th:src="${session.account.avatar != null and !session.account.avatar.isEmpty()
+                              ? session.account.avatar
+                              : '/images/default-user.png'}"
+                                         alt="User Avatar"
+                                         class="rounded-full object-cover"/>
+                                </div>
+                                <div class="flex flex-1 items-start justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-3">
+                                            <h1 class="text-[30px] font-bold leading-tight text-gray-900"
+                                                th:text="${session.account.userName}">
+                                            </h1>
+                                        </div>
+
+
+                                        <div class="mt-2">
+                                        <span class="text-[15px] text-gray-500">
+                                            Cập nhật chức danh
+                                        </span>
+                                        </div>
+                                    </div>
+
+                                    <button type="button"
+                                            onclick="openModal()"
+                                            class="flex h-9 w-9 items-center justify-center rounded-lg text-red-500 transition hover:bg-red-50 hover:text-red-500"
+                                            title="Chỉnh sửa">
+                                        <i class="ph ph-note-pencil  text-[24px]"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="flex items-center gap-2 my-4 rounded-lg bg-orange-50 px-3 py-2.5 text-orange-600">
+                                <i class="ph ph-warning-circle text-[17px]"></i>
+                                <span class="text-[14px] font-medium">
+                                Hồ sơ của bạn chưa được hoàn thiện
+                            </span>
+                            </div>
+                            <div class="grid grid-cols-2 max-xl:grid-cols-1 gap-x-6 gap-y-3 mt-2 text-[14px]">
+                                <!-- Email -->
+                                <div class="flex items-center gap-2.5 text-gray-600">
+                                    <i class="ph ph-envelope-simple text-[18px] text-gray-400"></i>
+                                    <span class="truncate" th:text="${session.account.email}">Email</span>
+                                </div>
+
+                                <!-- Số điện thoại -->
+                                <div class="flex items-center gap-2.5 text-gray-600">
+                                    <i class="ph ph-phone text-[18px] text-gray-400"></i>
+                                    <span>0708110429</span>
+                                </div>
+
+                                <!-- Ngày sinh -->
+                                <div class="flex items-center gap-2.5 text-gray-600">
+                                    <i class="ph ph-cake text-[18px] text-gray-400"></i>
+                                    <span>Ngày sinh</span>
+                                </div>
+
+                                <!-- Giới tính -->
+                                <div class="flex items-center gap-2.5 text-gray-600">
+                                    <i class="ph ph-user text-[18px] text-gray-400"></i>
+                                    <span th:text="${session.account.gender != null and !session.account.gender.isEmpty()
+                           ? session.account.gender
+                           : 'Giới tính'}">Giới tính</span>
+                                </div>
+
+                                <!-- Địa chỉ hiện tại -->
+                                <div class="flex items-center gap-2.5 text-gray-600">
+                                    <i class="ph ph-map-pin text-[18px] text-gray-400"></i>
+                                    <span>Địa chỉ hiện tại</span>
+                                </div>
+
+                                <!-- Link cá nhân -->
+                                <div class="flex items-center gap-2.5 text-gray-600">
+                                    <i class="ph ph-globe text-[18px] text-gray-400"></i>
+                                    <span>Link cá nhân</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Giới thiệu bản thân</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400"
+                                >
+                                    Giới thiệu điểm mạnh và số năm kinh nghiệm của bạn
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-identification-card text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition"
+                                        title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Học vấn</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400">
+                                    Chia sẻ trình độ học vấn của bạn
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-graduation-cap text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Kinh nghiệm làm việc</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 30%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400">
+                                    Thể hiện những thông tin chi tiết về quá trình làm việc
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-briefcase text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Kỹ năng</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 20%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400"
+                                >
+                                    Liệt kê các kỹ năng chuyên môn của bạn
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-gear-six text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Ngoại ngữ</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 10%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400"
+                                >
+                                    Liệt kê các ngôn ngữ mà bạn biết
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-translate text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 7. DỰ ÁN NỔI BẬT -->
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Dự án nổi bật</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400"
+                                >
+                                    Giới thiệu dự án nổi bật của bạn
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-folder-open text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Chứng chỉ</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400"
+                                >
+                                    Bổ sung chứng chỉ liên quan đến kỹ năng của bạn
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-certificate text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 9. GIẢI THƯỞNG -->
+                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 class="text-[18px] font-bold text-gray-900">Giải thưởng</h2>
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+                                </div>
+                                <p class="mt-1 text-[14px] text-gray-400"
+                                >
+                                    Thể hiện giải thưởng hoặc thành tích mà bạn đạt được
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+                                    <i class="ph ph-trophy text-[22px]"></i>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+                                    <i class="ph ph-plus-circle text-[26px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="rounded-2xl border border-[#d9dfe6] bg-white p-6 shadow-sm lg:col-span-5 h-fit">
+                        <div class="rounded-[20px] border border-[#f6d7d7] bg-[#fef1f0] p-4 shadow-sm">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-[15px] font-bold text-[#1f2937]">Độ hoàn thiện hồ sơ</div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[28px] font-bold text-[#e11d48]">5%</span>
+                                </div>
+                            </div>
+
+                            <!--                            <div class="mt-4 flex items-center justify-between rounded-[14px] border border-[#f5c2c7] bg-[#fff4f4] p-3">-->
+                            <!--                                <div class="flex items-center gap-3">-->
+                            <!--                                    <div class="flex h-7 w-7 items-center justify-center rounded-full bg-[#fbe1e4] text-[#ef4444]">-->
+                            <!--                                        <i class="ph ph-check text-[18px]"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <span class="text-[18px] font-semibold text-[#1f2937]">Độ hoàn thiện hồ sơ</span>-->
+                            <!--                                </div>-->
+                            <!--                                <div class="flex items-center gap-2">-->
+                            <!--                                    <span class="text-[22px] font-bold text-[#ef4444]">5%</span>-->
+                            <!--                                    <div class="flex h-7 w-7 items-center justify-center rounded-full border border-[#ef4444] bg-[#fdf2f2] text-[#ef4444]">-->
+                            <!--                                        <i class="ph ph-star text-[16px]"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
+
+                            <div class="mt-5 space-y-4">
+                                <span>
+                                    Nâng cấp hồ sơ của bạn lên 70% để bắt đầu tạo mẫu CV IT chuyên nghiệp.
+                                </span>
+                                <div class="flex items-center justify-between gap-3 text-[17px] font-medium text-[#1f2937]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex h-6 w-6 items-center justify-center rounded-full border border-[#1f2937] bg-white text-[#111827]">
+                                            <i class="ph ph-plus text-[14px]"></i>
+                                        </div>
+                                        <span>Kinh nghiệm làm việc</span>
+                                    </div>
+                                    <span class="text-[#16a34a] font-bold">↑ 30%</span>
+                                </div>
+
+                                <div class="flex items-center justify-between gap-3 text-[17px] font-medium text-[#1f2937]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex h-6 w-6 items-center justify-center rounded-full border border-[#1f2937] bg-white text-[#111827]">
+                                            <i class="ph ph-plus text-[14px]"></i>
+                                        </div>
+                                        <span>Kỹ năng</span>
+                                    </div>
+                                    <span class="text-[#16a34a] font-bold">↑ 20%</span>
+                                </div>
+
+                                <div class="flex items-center justify-between gap-3 text-[17px] font-medium text-[#1f2937]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex h-6 w-6 items-center justify-center rounded-full border border-[#1f2937] bg-white text-[#111827]">
+                                            <i class="ph ph-plus text-[14px]"></i>
+                                        </div>
+                                        <span>Thông tin cá nhân</span>
+                                    </div>
+                                    <span class="text-[#16a34a] font-bold">↑ 10%</span>
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                    class="mt-6 w-full rounded-lg bg-[#e11d48] py-4 text-center text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d11d43]">
+                                Xem và Tải CV
+                            </button>
+                        </div>
+
+                        <div class="mt-6 rounded-[20px] bg-white border border-[#e5e7eb] p-4 shadow-sm">
+                            <div class="flex items-center justify-between gap-4">
+                                <div class="flex-1">
+                                    <h3 class="text-[22px] font-bold leading-tight text-[#111827]">Cập nhật nhanh hồ
+                                        sơ</h3>
+                                    <p class="mt-2 text-[14px] leading-6 text-[#6b7280]">
+                                        Điền nhanh hồ sơ bằng CV của bạn chỉ với ít phút.
+                                    </p>
+                                </div>
+                                <div class="flex h-[84px] w-[120px] items-center justify-center rounded-xl border border-[#e5e7eb] bg-[#f6f7f8] p-2 shadow-inner">
+                                    <div class="relative h-full w-full rounded-md border border-[#d1d5db] bg-white p-2 shadow-sm">
+                                        <div class="absolute left-2 top-2 h-5 w-5 rounded-sm bg-[#f8d7d7]"></div>
+                                        <div class="absolute right-2 top-2 h-5 w-5 rounded-sm bg-[#dbeafe]"></div>
+                                        <div class="absolute left-3 bottom-2 h-10 w-10 rounded-md bg-[#efefef]"></div>
+                                        <div class="absolute right-4 bottom-3 h-8 w-8 rounded-md border border-[#d1d5db] bg-[#f3f4f6]"></div>
+                                        <div class="absolute inset-x-5 top-10 h-10 rounded-md border border-[#d1d5db] bg-white"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                    class="mt-6 w-full rounded-lg border border-[#ef4444] bg-white py-3 text-center text-[18px] font-bold text-[#e11d48] transition hover:bg-red-50">
+                                Điền hồ sơ tự động
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div th:replace="client/dashboard/ModalEditProfile :: editProfileModal"></div>
+<script th:src="@{/js/modalEditProfile.js}"></script>
+</body>
+</html>

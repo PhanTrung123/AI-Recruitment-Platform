@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div th:fragment="header">
+    <header
+            class="sticky top-0 z-50 flex items-center justify-between text-white px-4 py-2 md:px-8  w-full border-b border-white/10 bg-transparent"
+    >
+        <div class="flex items-center gap-3 lg:gap-10">
+            <button
+                    id="menu-btn"
+                    class="block lg:hidden cursor-pointer hover:text-gray-300 transition-colors focus:outline-none"
+            >
+                <i id="menu-icon" class="ph ph-list text-[26px]"></i>
+            </button>
+
+            <a th:href="@{/}" class="flex items-center">
+                <img src="/images/logo.png" th:src="@{/images/logo.png}" alt="RecruitOS"
+                     class="h-10 md:h-12 w-auto object-contain"/>
+            </a>
+            <ul
+                    id="mobile-menu"
+                    class="hidden absolute top-full left-0 w-full bg-gray-900 flex-col p-5 gap-5 border-t border-gray-700 lg:static lg:flex lg:w-auto lg:bg-transparent lg:flex-row lg:p-0 lg:gap-7 lg:border-none font-semibold text-[15px]"
+            >
+                <!--   IT Jobs   -->
+                <li class="group/it-jobs relative flex flex-col items-stretch cursor-pointer hover:text-gray-300 transition-colors lg:flex-row lg:items-center lg:overflow-visible">
+                    <a href="/jobs"
+                       class="flex w-full items-center justify-between lg:w-auto lg:justify-start lg:gap-1 lg:py-3">
+                        IT Jobs <i class="ph ph-caret-down text-sm"></i>
+                    </a>
+
+                    <div id="it-jobs-dropdown"
+                         class="static mt-3 hidden w-full flex-col overflow-y-auto rounded-lg border border-gray-200 bg-white text-gray-900 shadow-2xl transition-all duration-150
+                lg:absolute lg:left-0 lg:top-[calc(100%+12px)] lg:mt-0 lg:max-h-none lg:w-[min(1120px,calc(100vw-64px))] lg:flex lg:flex-row lg:overflow-visible
+                lg:invisible lg:opacity-0 lg:pointer-events-none
+                lg:shadow-[0_18px_45px_rgba(15,23,42,0.12)]
+                lg:group-hover/it-jobs:visible lg:group-hover/it-jobs:opacity-100 lg:group-hover/it-jobs:pointer-events-auto
+                lg:group-focus-within/it-jobs:visible lg:group-focus-within/it-jobs:opacity-100 lg:group-focus-within/it-jobs:pointer-events-auto
+                before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 before:content-['']"
+                         aria-label="IT Jobs categories">
+
+                        <div class="flex w-full flex-col lg:flex-row">
+                            <!-- CỘT BÊN TRÁI -->
+                            <div class="flex flex-col border-r border-gray-200 lg:w-[280px] lg:shrink-0">
+                                <a href="#" onmouseenter="showCategoryTab('domain', this)"
+                                   class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
+                                    Jobs by Domain <i class="ph ph-caret-right text-lg"></i>
+                                </a>
+
+                                <a href="#" onmouseenter="showCategoryTab('skill', this)"
+                                   class="tab-item flex items-center justify-between bg-red-50 px-3 py-3 font-medium text-red-600 lg:px-5 lg:py-4">
+                                    Jobs by Skill <i class="ph ph-caret-right text-lg"></i>
+                                </a>
+
+                                <a href="#" onmouseenter="showCategoryTab('expertise', this)"
+                                   class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
+                                    Jobs by Expertise <i class="ph ph-caret-right text-lg"></i>
+                                </a>
+
+                                <a href="#" onmouseenter="showCategoryTab('title', this)"
+                                   class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
+                                    Jobs by Title <i class="ph ph-caret-right text-lg"></i>
+                                </a>
+
+                                <a href="#" onmouseenter="showCategoryTab('company', this)"
+                                   class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
+                                    Jobs by Company <i class="ph ph-caret-right text-lg"></i>
+                                </a>
+
+                                <a href="#" onmouseenter="showCategoryTab('city', this)"
+                                   class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
+                                    Jobs by City <i class="ph ph-caret-right text-lg"></i>
+                                </a>
+                            </div>
+
+                            <!-- CỘT BÊN PHẢI -->
+                            <div class="p-5 lg:flex-1">
+                                <!-- 1. Domain -->
+                                <div id="tab-content-domain"
+                                     class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                                    <a th:each="domain : ${domains}"
+                                       th:href="@{/search/domain/{id}(id=${domain.domain_id})}"
+                                       th:text="${domain.domainName}"
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                    </a>
+                                </div>
+
+                                <!-- 2. Skill -->
+                                <div id="tab-content-skill"
+                                     class="category-content grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                                    <a th:each="skill : ${skills}"
+                                       th:href="@{/jobs/skill/{id}(id=${skill.skill_id})}"
+                                       th:text="${skill.skillName}"
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                    </a>
+                                </div>
+
+                                <!-- 3. Expertise -->
+                                <div id="tab-content-expertise"
+                                     class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                                    <a th:each="expertise : ${expertises}"
+                                       th:href="@{/jobs/expertise/{id}(id=${expertise.expertisies_id})}"
+                                       th:text="${expertise.ExpertiseName}"
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                    </a>
+                                </div>
+
+                                <!-- 4. Title -->
+                                <div id="tab-content-title"
+                                     class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                                    <span class="text-sm text-gray-500">Đang cập nhật Title...</span>
+                                </div>
+
+                                <!-- 5. Company -->
+                                <div id="tab-content-company"
+                                     class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                                    <a th:each="company : ${companies}"
+                                       th:href="@{/jobs/company/{id}(id=${company.company_id})}"
+                                       th:title="${company.name}"
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
+                                        <span th:text="${company.name}" class="truncate"></span>
+                                    </a>
+                                </div>
+
+                                <!-- 6. City  -->
+                                <div id="tab-content-city"
+                                     class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4">
+                                    <a th:each="city : ${T(com.quangtrung.HireAI.enums.City).values()}"
+                                       th:href="@{/jobs/city/{name}(name=${city.name()})}"
+                                       th:text="${city.displayName}"
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!--   IT Companies   -->
+                <li class="group/companies relative flex flex-col items-stretch cursor-pointer hover:text-gray-300 transition-colors lg:flex-row lg:items-center">
+                    <!-- Thẻ link chính điều hướng tới /companies -->
+                    <a href="/companies"
+                       class="flex w-full items-center justify-between lg:w-auto lg:justify-start lg:gap-1 lg:py-3 font-medium"
+                    >
+                        IT Companies
+                        <i class="ph ph-caret-down text-sm"></i>
+                    </a>
+
+                    <!-- Dropdown Menu -->
+                    <div
+                            id="it-companies-dropdown"
+                            class="static mt-3 hidden w-full flex-col rounded-lg border border-gray-200 bg-white p-5 text-gray-900 shadow-2xl transition-all duration-200
+            lg:absolute lg:left-0 lg:top-[calc(100%+12px)] lg:mt-0 lg:flex lg:w-[850px] lg:flex-row lg:gap-8 lg:p-6
+            lg:invisible lg:opacity-0 lg:pointer-events-none lg:overflow-visible
+            lg:shadow-[0_18px_45px_rgba(15,23,42,0.12)]
+            lg:group-hover/companies:visible lg:group-hover/companies:opacity-100 lg:group-hover/companies:pointer-events-auto
+            lg:group-focus-within/companies:visible lg:group-focus-within/companies:opacity-100 lg:group-focus-within/companies:pointer-events-auto
+            before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 before:content-[''] cursor-default"
+                            aria-label="IT Companies categories"
+                    >
+                        <!-- Cột trái: CÔNG TY IT TỐT NHẤT -->
+                        <div class="flex-1 lg:border-r lg:border-gray-200 lg:pr-8">
+                            <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
+                                Công ty IT Tốt Nhất
+                            </h3>
+
+                            <div class="flex flex-col lg:flex-row gap-6">
+                                <!-- Banner Nổi Bật -->
+                                <div class="w-full lg:w-1/2">
+                                    <a href="/cong-ty-it-tot-nhat-2026" class="block group/item">
+                                        <div class="overflow-hidden rounded-md bg-gray-100 aspect-[4/3] relative mb-3">
+                                            <img src="https://placehold.co/400x300/ffeeee/e11d48?text=Top+IT+2026"
+                                                 alt="Công ty IT tốt nhất Việt Nam 2026"
+                                                 class="object-cover w-full h-full group-hover/item:scale-105 transition-transform duration-300">
+                                        </div>
+                                        <h4 class="font-bold text-base text-gray-900 group-hover/item:text-red-600 transition-colors">
+                                            Công ty IT tốt nhất Việt Nam 2026
+                                        </h4>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Top 30 Công ty IT tốt nhất Việt Nam 2026, dựa trên tổng quan đánh giá công
+                                            ty từ các nhân viên lĩnh vực IT.
+                                        </p>
+                                    </a>
+                                </div>
+
+                                <!-- Danh sách các năm -->
+                                <div class="w-full lg:w-1/2 flex flex-col gap-3 lg:gap-4 justify-start">
+                                    <a href="/cong-ty-it-tot-nhat-2025"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Công ty IT Tốt Nhất 2025
+                                    </a>
+                                    <a href="/cong-ty-it-tot-nhat-2024"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Công ty IT Tốt Nhất 2024
+                                    </a>
+                                    <a href="/cong-ty-it-tot-nhat-2023"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Công ty IT Tốt Nhất 2023
+                                    </a>
+                                    <a href="/cong-ty-it-tot-nhat-2022"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Công ty IT Tốt Nhất 2022
+                                    </a>
+                                    <a href="/cong-ty-it-tot-nhat-2021"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Công ty IT Tốt Nhất 2021
+                                    </a>
+                                    <a href="/cong-ty-it-tot-nhat-2020"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Công ty IT Tốt Nhất 2020
+                                    </a>
+                                    <a href="/cong-ty-it-tot-nhat-2019"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Công ty IT Tốt Nhất 2019
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: ĐÁNH GIÁ CÔNG TY -->
+                        <div class="w-full lg:w-[280px] shrink-0">
+                            <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
+                                Đánh giá công ty
+                            </h3>
+
+                            <a href="/danh-gia-cong-ty" class="block group/item">
+                                <div class="overflow-hidden rounded-md bg-gray-100 aspect-[4/3] relative mb-3">
+                                    <img src="https://placehold.co/400x300/f3e8ff/9333ea?text=Company+Reviews"
+                                         alt="Đánh giá công ty IT"
+                                         class="object-cover w-full h-full group-hover/item:scale-105 transition-transform duration-300">
+                                </div>
+                                <h4 class="font-bold text-base text-gray-900 group-hover/item:text-red-600 transition-colors">
+                                    Khám phá 29,146 đánh giá công ty IT hàng đầu
+                                </h4>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Review chế độ đãi ngộ, môi trường làm việc, chính sách OT... cái gì cũng có
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
+                <!--    Blog          -->
+                <li class="group/blog relative flex flex-col items-stretch cursor-pointer hover:text-gray-300 transition-colors lg:flex-row lg:items-center">
+                    <a href="/blog"
+                       class="flex w-full items-center justify-between lg:w-auto lg:justify-start lg:gap-1 lg:py-3 font-medium"
+                    >
+                        Blog
+                        <i class="ph ph-caret-down text-sm"></i>
+                    </a>
+
+                    <!-- Dropdown Menu -->
+                    <div
+                            class="static mt-3 hidden w-full flex-col rounded-lg border border-gray-200 bg-white p-5 text-gray-900 shadow-2xl transition-all duration-200
+            lg:absolute lg:left-0 lg:top-[calc(100%+12px)] lg:mt-0 lg:flex lg:w-[850px] lg:flex-row lg:gap-8 lg:p-6
+            lg:invisible lg:opacity-0 lg:pointer-events-none lg:overflow-visible
+            lg:shadow-[0_18px_45px_rgba(15,23,42,0.12)]
+            lg:group-hover/blog:visible lg:group-hover/blog:opacity-100 lg:group-hover/blog:pointer-events-auto
+            lg:group-focus-within/blog:visible lg:group-focus-within/blog:opacity-100 lg:group-focus-within/blog:pointer-events-auto
+            before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 before:content-[''] cursor-default"
+                    >
+                        <!-- Cột trái: BÁO CÁO LƯƠNG IT -->
+                        <div class="flex-1 lg:border-r lg:border-gray-200 lg:pr-8">
+                            <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
+                                Báo Cáo Lương IT
+                            </h3>
+
+                            <div class="flex flex-col lg:flex-row gap-6">
+                                <!-- Bài viết/Báo cáo nổi bật -->
+                                <div class="w-full lg:w-[55%]">
+                                    <a href="/bao-cao-luong-it-2025-2026" class="block group/item">
+                                        <div class="overflow-hidden rounded-md bg-gray-100 relative mb-3 aspect-[16/10]">
+                                            <img src="https://placehold.co/400x250/a01c1c/ffffff?text=IT+Salary+Report"
+                                                 alt="Báo Cáo Lương IT 2025-2026"
+                                                 class="object-cover w-full h-full group-hover/item:scale-105 transition-transform duration-300">
+                                        </div>
+                                        <h4 class="font-bold text-base text-gray-900 group-hover/item:text-red-600 transition-colors leading-snug">
+                                            Báo Cáo Lương & Thị Trường Tuyển Dụng IT 2025-2026
+                                        </h4>
+                                    </a>
+                                </div>
+
+                                <!-- Danh sách báo cáo các năm -->
+                                <div class="w-full lg:w-[45%] flex flex-col gap-4 justify-start pt-1">
+                                    <a href="/bao-cao-luong-it-2024-2025"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Báo Cáo Lương IT 2024-2025
+                                    </a>
+                                    <a href="/bao-cao-luong-it-2023-2024"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Báo Cáo Lương IT 2023-2024
+                                    </a>
+                                    <a href="/bao-cao-luong-it-2022-2023"
+                                       class="text-gray-800 hover:text-red-600 font-medium transition-colors">
+                                        Báo Cáo Lương IT 2022-2023
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: BLOG CATEGORIES -->
+                        <div class="w-full lg:w-[280px] shrink-0">
+                            <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
+                                Blog
+                            </h3>
+
+                            <div class="flex flex-col gap-3">
+                                <a href="/blog/itviec"
+                                   class="flex items-center gap-3 rounded border border-gray-200 p-3 hover:border-red-600 hover:text-red-600 transition-colors group/cat">
+                                    <i class="ph-fill ph-chat-circle-dots text-xl text-red-600"></i>
+                                    <span class="font-medium text-gray-800 group-hover/cat:text-red-600 transition-colors">Blog ITviec</span>
+                                </a>
+
+                                <a href="/blog/su-nghiep-it"
+                                   class="flex items-center gap-3 rounded border border-gray-200 p-3 hover:border-red-600 hover:text-red-600 transition-colors group/cat">
+                                    <i class="ph-fill ph-briefcase text-xl text-red-600"></i>
+                                    <span class="font-medium text-gray-800 group-hover/cat:text-red-600 transition-colors">Sự Nghiệp IT</span>
+                                </a>
+
+                                <a href="/blog/ung-tuyen-thang-tien"
+                                   class="flex items-center gap-3 rounded border border-gray-200 p-3 hover:border-red-600 hover:text-red-600 transition-colors group/cat">
+                                    <i class="ph-fill ph-trend-up text-xl text-red-600"></i>
+                                    <span class="font-medium text-gray-800 group-hover/cat:text-red-600 transition-colors">Ứng Tuyển & Thăng Tiến</span>
+                                </a>
+
+                                <a href="/blog/chuyen-mon-it"
+                                   class="flex items-center gap-3 rounded border border-gray-200 p-3 hover:border-red-600 hover:text-red-600 transition-colors group/cat">
+                                    <i class="ph-fill ph-books text-xl text-red-600"></i>
+                                    <span class="font-medium text-gray-800 group-hover/cat:text-red-600 transition-colors">Chuyên Môn IT</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!--    Features          -->
+                <li class="group/features relative flex flex-col items-stretch cursor-pointer hover:text-gray-300 transition-colors lg:flex-row lg:items-center lg:overflow-visible">
+                    <a href="/features"
+                       class="flex w-full items-center justify-between gap-1.5 lg:w-auto lg:justify-start lg:py-3"
+                    >
+                        <span>Features</span>
+                        <span class="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">HOT</span>
+                        <i class="ph ph-caret-down text-sm"></i>
+                    </a>
+                    <div
+                            class="static mt-3 hidden w-full flex-col rounded-xl bg-white text-gray-900 shadow-2xl transition-opacity duration-150 lg:absolute lg:left-0 lg:top-[calc(100%+12px)]
+            lg:mt-0 lg:w-[340px] lg:flex lg:invisible lg:opacity-0 lg:pointer-events-none border border-gray-100
+            lg:shadow-[0_18px_45px_rgba(15,23,42,0.12)] lg:group-hover/features:visible lg:group-hover/features:opacity-100
+            lg:group-hover/features:pointer-events-auto p-2 cursor-default
+            before:content-[''] before:absolute before:-top-4 before:left-0 before:right-0 before:h-4 before:block"
+                    >
+                        <div class="flex flex-col gap-1">
+                            <a href="#"
+                               class="flex items-center gap-3.5 p-3 rounded-lg hover:bg-gray-50 transition-colors group">
+                                <div class="w-11 h-11 rounded-full bg-red-100/70 flex items-center justify-center shrink-0">
+                                    <i class="ph-fill ph-briefcase text-2xl text-red-500"></i>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-gray-900 group-hover:text-red-600 transition-colors text-base">Nhận lời mời công việc</span>
+                                    <span class="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md uppercase">HOT</span>
+                                </div>
+                            </a>
+                            <a href="#"
+                               class="flex items-center gap-3.5 p-3 rounded-lg hover:bg-gray-50 transition-colors group">
+                                <div class="w-11 h-11 rounded-full bg-red-100/70 flex items-center justify-center shrink-0">
+                                    <i class="ph-fill ph-address-book text-2xl text-red-500"></i>
+                                </div>
+                                <span class="font-bold text-gray-900 group-hover:text-red-600 transition-colors text-base">Mẫu CV chuẩn IT</span>
+                            </a>
+                            <a href="#"
+                               class="flex items-center gap-3.5 p-3 rounded-lg hover:bg-gray-50 transition-colors group">
+                                <div class="w-11 h-11 rounded-full bg-red-100/70 flex items-center justify-center shrink-0">
+                                    <i class="ph-fill ph-trophy text-2xl text-red-500"></i>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-gray-900 group-hover:text-red-600 transition-colors text-base">Story Hub</span>
+                                    <span class="bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md uppercase">MỚI</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-6">
+            <div class="hidden lg:flex items-center gap-3">
+                <div
+                        class="flex flex-col px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700 transition-colors min-w-[130px]"
+                >
+                    <div
+                            class="flex items-center justify-between text-gray-400 text-xs mb-0.5"
+                    >
+                        <span>Hiring</span>
+                        <i class="ph ph-arrow-up-right"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white">Exclusive Jobs</h3>
+                </div>
+
+                <div
+                        class="flex flex-col px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700 transition-colors min-w-[130px]"
+                >
+                    <div
+                            class="flex items-center justify-between text-gray-400 text-xs mb-0.5"
+                    >
+                        <span>Solutions</span>
+                        <i class="ph ph-arrow-up-right"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white">For Employers</h3>
+                </div>
+            </div>
+
+            <div class="hidden lg:block w-[1px] h-8 bg-gray-700 mx-2"></div>
+
+            <div class="flex items-center gap-4 md:gap-5">
+                <a class="cursor-pointer hover:text-gray-300 transition-colors">
+                    <i class="ph ph-magnifying-glass text-[22px] md:text-[24px]"></i>
+                </a>
+                <div class="cursor-pointer hover:text-gray-300 transition-colors">
+                    <i
+                            class="ph ph-chat-teardrop-dots text-[22px] md:text-[24px]"
+                    ></i>
+                </div>
+                <div
+                        class="relative cursor-pointer hover:text-gray-300 transition-colors"
+                >
+                    <i class="ph ph-bell text-[22px] md:text-[24px]"></i>
+                    <div
+                            class="absolute w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-red-500 top-0.5 right-0 border border-gray-900"
+                    ></div>
+                </div>
+            </div>
+            <a th:if="${session.account == null}"
+               th:href="@{/login}"
+               class="flex items-center gap-2 ml-1 md:ml-2 text-white hover:text-gray-300 transition-colors cursor-pointer">
+
+                <i class="ph ph-user-circle text-[27px]"></i>
+
+                <span class="hidden sm:block text-sm md:text-base font-semibold">
+        Sign in
+    </span>
+            </a>
+            <div th:if="${session.account != null}"
+                 class="relative group/user ml-1 md:ml-2">
+                <button type="button"
+                        class="flex items-center gap-2 cursor-pointer focus:outline-none">
+                    <img th:src="${session.account.avatar != null and !session.account.avatar.isEmpty()
+                      ? session.account.avatar
+                      : '/images/default-user.png'}"
+                         alt="User Avatar"
+                         class="w-9 h-9 rounded-full object-cover border border-gray-400"/>
+                    <i class="ph ph-caret-down text-[13px] text-gray-300"></i>
+                </button>
+                <div class="absolute right-0 top-full pt-2 w-[350px] hidden group-hover/user:block z-50">
+
+                    <div class="bg-white rounded-xl shadow-xl overflow-hidden text-gray-900">
+                        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-200">
+                            <img th:src="${session.account.avatar != null and !session.account.avatar.isEmpty()
+                              ? session.account.avatar
+                              : '/images/default-user.png'}"
+                                 alt="User Avatar"
+                                 class="w-12 h-12 rounded-full object-cover"/>
+                            <div class="flex flex-col min-w-0">
+
+                    <span class="text-[17px] font-medium text-gray-900 truncate"
+                          th:text="${session.account.userName}">
+                    </span>
+                                <span class="text-sm text-gray-400 truncate"
+                                      th:text="${session.account.email}">
+                    </span>
+
+                            </div>
+                        </div>
+                        <a th:href="@{/dashboard}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-squares-four text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    Dashboard
+                </span>
+                        </a>
+                        <a th:href="@{/cv-attachment}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-file-text text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    CV Attachment
+                </span>
+                        </a>
+
+                        <a th:href="@{/dashboard/profile}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-user text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    ITViec Profile
+                </span>
+                        </a>
+                        <a th:href="@{/my-jobs}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-briefcase text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    My Jobs
+                </span>
+                        </a>
+                        <a th:href="@{/job-invitation}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-briefcase text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    Job Invitation
+                </span>
+                        </a>
+                        <a th:href="@{/email-subscriptions}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-envelope text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    Email Subscriptions
+                </span>
+                        </a>
+                        <a th:href="@{/notifications}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-bell text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    Notifications
+                </span>
+                        </a>
+                        <a th:href="@{/settings}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+
+                            <i class="ph ph-gear text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    Settings
+                </span>
+                        </a>
+
+                        <a th:href="@{/logout}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors border-t border-gray-100">
+
+                            <i class="ph ph-sign-out text-[24px]"></i>
+
+                            <span class="text-[16px]">
+                    Sign Out
+                </span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div
+                    class="hidden sm:flex items-center text-sm font-bold ml-1 md:ml-4"
+            >
+                <span class="cursor-pointer text-white">EN</span>
+                <div class="w-px h-4 bg-gray-500 mx-2 md:mx-3"></div>
+                <span
+                        class="cursor-pointer text-gray-500 hover:text-white transition-colors"
+                >VN</span
+                >
+            </div>
+        </div>
+    </header>
+    <script>
+        function showCategoryTab(category, element) {
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('grid');
+            });
+
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('bg-red-50', 'text-red-600');
+                item.classList.add('text-gray-700');
+            });
+
+            const selectedContent = document.getElementById('tab-content-' + category);
+            if (selectedContent) {
+                selectedContent.classList.remove('hidden');
+                selectedContent.classList.add('grid');
+            }
+
+            element.classList.add('bg-red-50', 'text-red-600');
+            element.classList.remove('text-gray-700');
+        }
+    </script>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout/ClientLayout}">
+
+<head>
+    <title>Home</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <!-- HERO -->
+    <div class="bg-gradient-to-r from-gray-900 via-gray-900 to-[#3b0909] -mt-0.5">
+        <div th:replace="client/fragments/Hero::hero"></div>
+    </div>
+
+    <!-- EMPLOYER -->
+    <div th:replace="client/fragments/Employer::employer"></div>
+
+    <!-- ARTICLES -->
+    <div class="w-full bg-[#f7f7f7] py-12 px-4">
+        <div th:replace="client/fragments/Articles::articles"></div>
+    </div>
+
+    <!-- EXPERTISE -->
+    <div th:replace="client/fragments/Expertise::expertise"></div>
+
+</div>
+
+</body>
+</html>

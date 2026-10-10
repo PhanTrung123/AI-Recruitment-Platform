@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/AdminLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content" class="min-h-[calc(100vh-80px)] flex flex-col justify-center items-center py-6">
+    <div class="flex justify-center items-center mx-auto h-full w-full max-w-2xl">
+        <form th:object="${title}" th:action="@{/admin/titles/save}" method="post"
+              class="w-full min-w-2xl bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden text-left mx-4 sm:mx-0"
+        >
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                <h2 th:text="${title.isEdit?'modal edit title':'modal add title'}"
+                    class="text-lg font-semibold text-slate-800 capitalize">
+                </h2>
+            </div>
+
+            <div class="p-6 space-y-5">
+                <div>
+                    <label
+                            class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide"
+                    >
+                        Name
+                    </label>
+
+                    <!-- cần lấy id thì mới chỉnh sửa được nên ẩn id đi  -->
+                    <input
+                            type="text" id="title_id" th:field="*{title_id}"
+                            class="hidden"
+                    />
+                    <input
+                            type="text" id="titleName" th:field="*{titleName}"
+                            placeholder="Nhập tên chức danh..."
+                            class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-400"
+                    />
+                    <div th:if="${#fields.hasErrors('titleName')}" th:errors="*{titleName}"
+                         class="text-red-500 text-xs mt-1"></div>
+                </div>
+
+                <div>
+                    <label
+                            class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide"
+                    >
+                        Description
+                    </label>
+
+                    <textarea
+                            id="description" th:field="*{description}"
+                            rows="4"
+                            placeholder="Nhập mô tả về chức danh..."
+                            class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-400 resize-none"
+                    ></textarea>
+                    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                         class="text-red-500 text-xs mt-1"></div>
+                </div>
+            </div>
+
+            <div
+                    class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3"
+            >
+                <a th:href="@{/admin/titles}"
+                   id="cancelModalBtn"
+                   class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                    Cancel
+                </a>
+                <button th:text="${title.isEdit?'Edit':'Add'}" type="submit"
+                        class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition-colors cursor-pointer"
+                >
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

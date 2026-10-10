@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/AdminLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content" class="min-h-[calc(100vh-80px)] flex flex-col items-center py-8">
+    <form th:object="${job}" th:action="@{/admin/jobs/save}" method="post"
+          class="w-full max-w-4xl max-md:w-[90%] bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center shrink-0">
+            <h2 th:text="${job.isEdit?'modal edit job':'modal add job'}"
+                class="text-lg font-semibold text-slate-800 capitalize">
+            </h2>
+            <button type="button" class="text-slate-400 hover:text-red-500 transition-colors">
+                <i class="ph ph-x text-xl font-bold"></i>
+            </button>
+        </div>
+        <div class="p-6 space-y-6 overflow-y-auto flex-1">
+            <div>
+                <h3 class="text-sm font-bold text-slate-700 border-b border-slate-100 pb-2 mb-4">1. Thông tin cơ
+                    bản</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Tên công việc <span class="text-red-500">*</span>
+                        </label>
+                        <!-- cần lấy id thì mới chỉnh sửa được nên ẩn id đi  -->
+                        <input
+                                type="text" id="job_id" th:field="*{job_id}"
+                                class="hidden"
+                        />
+                        <input type="text" id="jobName" th:field="*{jobName}"
+                               required placeholder="VD: Senior Backend Developer..."
+                               class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-400"/>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Công ty <span class="text-red-500">*</span>
+                        </label>
+                        <select id="company" th:field="*{company_id}" required
+                                class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                            <option value="">-- Chọn công ty --</option>
+                            <option th:each="company : ${companies}"
+                                    th:value="${company.company_id}"
+                                    th:text="${company.name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Hình thức làm việc <span class="text-red-500">*</span>
+                        </label>
+                        <select id="workType" th:field="*{workType}" required
+                                class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                            <option value="" disabled>-- Chọn hình thức --</option>
+                            <option th:each="type : ${T(com.quangtrung.HireAI.enums.WorkType).values()}"
+                                    th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Chuyên môn (Expertise)
+                        </label>
+                        <select id="expertise" th:field="*{expertisies_id}" required
+                                class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                            <option value="" disabled>-- Chọn chuyên môn --</option>
+                            <option th:each="expertise : ${expertises}" th:value="${expertise.expertisies_id}"
+                                    th:text="${expertise.ExpertiseName}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Vị trí (Title)
+                        </label>
+                        <select id="title" th:field="*{title_id}" required
+                                class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                            <option value="" disabled>-- Chọn vị trí --</option>
+                            <option th:each="title : ${titles}" th:value="${title.title_id}"
+                                    th:text="${title.titleName}"></option>
+                        </select>
+                    </div>
+                    <div class="custom-select-container mt-4" data-type="domain">
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Lĩnh vực (Domain)
+                        </label>
+                        <select id="domainRealSelect" th:field="*{domain_id}" multiple class="hidden">
+                            <option th:each="domain : ${domains}"
+                                    th:value="${domain.domain_id}"
+                                    th:text="${domain.domainName}"
+                                    th:selected="${job.domain_id != null && #lists.contains(job.domain_id, domain.domain_id)}"></option>
+                        </select>
+                        <div class="relative w-full">
+                            <div class="flex flex-wrap items-center gap-2 w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 cursor-pointer min-h-[46px]"
+                                 onclick="toggleDropdown('domain')">
+                                <div id="domainSelectedTagsContainer"
+                                     class="flex flex-wrap gap-1.5 items-center empty:hidden"></div>
+
+                                <input type="text" id="domainPlaceholder" data-default="-- Chọn lĩnh vực --"
+                                       placeholder="-- Chọn lĩnh vực --"
+                                       class="flex-1 outline-none bg-transparent cursor-pointer text-sm text-slate-800 min-w-[150px]"
+                                       readonly>
+                            </div>
+
+                            <ul id="domainDropdownList"
+                                class="absolute z-10 w-full bg-white border border-slate-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
+                                <li th:each="domain : ${domains}"
+                                    class="domain-option px-4 py-2.5 hover:bg-slate-50 cursor-pointer text-sm text-slate-700 border-b border-slate-50 last:border-0"
+                                    th:attr="data-value=${domain.domain_id}, data-name=${domain.domainName}"
+                                    onclick="selectOption(this, 'domain')">
+                                    <span th:text="${domain.domainName}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="custom-select-container mt-4" data-type="skill">
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Kỹ năng (Skill)
+                        </label>
+                        <select id="skillRealSelect" th:field="*{skill_id}" multiple class="hidden">
+                            <option th:each="skill : ${skills}"
+                                    th:value="${skill.skill_id}"
+                                    th:text="${skill.skillName}"
+                                    th:selected="${job.skill_id != null && #lists.contains(job.skill_id, skill.skill_id)}"></option>
+                        </select>
+                        <div class="relative w-full">
+                            <div class="flex flex-wrap items-center gap-2 w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 cursor-pointer min-h-[46px]"
+                                 onclick="toggleDropdown('skill')">
+                                <div id="skillSelectedTagsContainer"
+                                     class="flex flex-wrap gap-1.5 items-center empty:hidden"></div>
+                                <input type="text" id="skillPlaceholder" data-default="-- Chọn kỹ năng --"
+                                       placeholder="-- Chọn kỹ năng --"
+                                       class="flex-1 outline-none bg-transparent cursor-pointer text-sm text-slate-800 min-w-[150px]"
+                                       readonly>
+                            </div>
+                            <ul id="skillDropdownList"
+                                class="absolute z-10 w-full bg-white border border-slate-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
+
+                                <!-- Sửa class thành skill-option, gọi hàm selectOption(this, 'skill'), sửa data-name -->
+                                <li th:each="skill : ${skills}"
+                                    class="skill-option px-4 py-2.5 hover:bg-slate-50 cursor-pointer text-sm text-slate-700 border-b border-slate-50 last:border-0"
+                                    th:attr="data-value=${skill.skill_id}, data-name=${skill.skillName}"
+                                    onclick="selectOption(this, 'skill')">
+                                    <span th:text="${skill.skillName}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Cấp bậc (Level)
+                        </label>
+                        <select id="level" th:field="*{level}" required
+                                class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                            <option value="" disabled>-- Chọn cấp bậc --</option>
+                            <option th:each="type : ${T(com.quangtrung.HireAI.enums.Level).values()}"
+                                    th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-slate-700 border-b border-slate-100 pb-2 mb-4">2. Lương, Hạn nộp & Địa
+                    điểm</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Mức lương
+                        </label>
+                        <input id="salary" th:field="*{salary}" type="text"
+                               placeholder="VD: $1,000 - $2,000 hoặc Thỏa thuận"
+                               class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-400"/>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Hạn nộp hồ sơ <span class="text-red-500">*</span>
+                        </label>
+                        <input id="expiredAt" th:field="*{expiredAt}" type="date" required
+                               class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer"/>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Tỉnh / Thành phố <span class="text-red-500">*</span>
+                        </label>
+                        <select id="city" th:field="*{city}" required
+                                class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                            <option value="" disabled>-- Chọn Tỉnh/Thành --</option>
+                            <option th:each="type : ${T(com.quangtrung.HireAI.enums.City).values()}"
+                                    th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Địa chỉ cụ thể
+                        </label>
+                        <input id="address" th:field="*{address}" type="text" placeholder="Số nhà, Đường, Quận/Huyện..."
+                               class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-400"/>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-slate-700 border-b border-slate-100 pb-2 mb-4">3. Chi tiết công
+                    việc</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Mô tả công việc
+                        </label>
+                        <textarea id="description" th:field="*{description}" rows="3"
+                                  class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Yêu cầu ứng viên
+                        </label>
+                        <textarea id="requirements" th:field="*{requirements}" rows="3"
+                                  class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Quyền lợi
+                        </label>
+                        <textarea id="benefits" th:field="*{benefits}" rows="3"
+                                  class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3 shrink-0">
+            <a th:href="@{/admin/jobs}" id="cancelModalBtn"
+               class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+                Cancel
+            </a>
+            <button th:text="${job.isEdit?'Edit':'Add'}" type="submit"
+                    class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition-colors cursor-pointer"
+            >
+            </button>
+        </div>
+    </form>
+</div>
+<script th:if="${job.isEdit}">
+    (function () {
+        ['domain', 'skill'].forEach(type => {
+            const realSelect = document.getElementById(`${type}RealSelect`);
+            if (!realSelect) return;
+
+            const container = document.getElementById(`${type}SelectedTagsContainer`);
+            const placeholder = document.getElementById(`${type}Placeholder`);
+            const dropdownOptions = document.querySelectorAll(`.${type}-option`);
+
+            const selectedValues = Array.from(realSelect.selectedOptions).map(option => option.value);
+
+            if (selectedValues.length > 0) {
+                if (placeholder) {
+                    placeholder.placeholder = '';
+                }
+
+                selectedValues.forEach(value => {
+                    const option = Array.from(realSelect.options).find(opt => opt.value === value);
+                    if (option) {
+                        const name = option.text;
+                        const tag = document.createElement('span');
+                        tag.className = 'inline-flex items-center bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md gap-1.5 transition-all';
+                        tag.id = `tag-${type}-${value}`;
+                        tag.innerHTML = `
+                            ${name}
+                            <button type="button" class="text-blue-400 hover:text-blue-800 focus:outline-none transition-colors" onclick="removeOption('${value}', '${type}', event)">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                </svg>
+                            </button>
+                        `;
+                        container.appendChild(tag);
+
+                        dropdownOptions.forEach(opt => {
+                            if (opt.getAttribute('data-value') === value) {
+                                opt.classList.add('hidden');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    })();
+</script>
+</body>
+</html>

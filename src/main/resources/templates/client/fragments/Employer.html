@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="employer">
+    <div class="w-full mx-auto py-4 max-xl:py-8">
+        <ul
+                class="flex items-center justify-center max-xl:grid max-xl:grid-cols-2 gap-12 md:gap-20"
+        >
+            <li
+                    class="max-xl:relative flex max-xl:flex-col whitespace-nowrap items-center gap-3 cursor-pointer group"
+            >
+                <div class="max-xl:relative">
+                    <div
+                            class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 group-hover:-translate-y-1 transition-transform duration-300"
+                    >
+                        <i class="ph-fill ph-briefcase text-4xl"></i>
+                    </div>
+                </div>
+                <span
+                        class="text-sm font-medium text-gray-800 text-center flex-nowrap"
+                >
+            Receive job invitation
+          </span>
+                <span
+                        class="max-xl:absolute -top-1 -right-1 z-10 bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm shadow-sm"
+                >
+            HOT
+          </span>
+            </li>
+
+            <li
+                    class="max-xl:relative flex max-xl:flex-col items-center gap-3 cursor-pointer group"
+            >
+                <div
+                        class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 group-hover:-translate-y-1 transition-transform duration-300"
+                >
+                    <i class="ph-fill ph-file-text text-4xl"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-800 text-center"
+                >IT CV Templates</span
+                >
+            </li>
+
+            <li
+                    class="max-xl:relative flex max-xl:flex-col items-center gap-3 cursor-pointer group"
+            >
+                <div
+                        class="max-xl:relative w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 group-hover:-translate-y-1 transition-transform duration-300"
+                >
+                    <i class="ph-fill ph-trophy text-4xl"></i>
+                </div>
+
+                <span class="text-sm font-medium text-gray-800 text-center">
+            Story Hub
+          </span>
+                <span
+                        class="max-xl:absolute -top-1 -right-1 z-10 bg-green-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm shadow-sm"
+                >
+            NEW
+          </span>
+            </li>
+
+            <li
+                    class="relative flex max-xl:flex-col items-center gap-3 cursor-pointer group"
+            >
+                <div
+                        class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 group-hover:-translate-y-1 transition-transform duration-300"
+                >
+                    <i class="ph-fill ph-buildings text-4xl"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-800 text-center"
+                >Company Reviews</span
+                >
+            </li>
+
+            <li
+                    class="relative flex max-xl:flex-col items-center gap-3 cursor-pointer group"
+            >
+                <div
+                        class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 group-hover:-translate-y-1 transition-transform duration-300"
+                >
+                    <i class="ph-fill ph-chart-bar text-4xl"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-800 text-center"
+                >IT Salary Report</span
+                >
+            </li>
+        </ul>
+    </div>
+    <div class="mx-auto justify-center max-w-7xl my-16 px-4">
+        <h3 class="capitalize font-bold text-center text-3xl mb-8">
+            Top Employers
+        </h3>
+        <div class="grid grid-cols-3 max-xl:grid-cols-2 max-md:grid-cols-1 gap-6">
+            <div
+                    class="relative overflow-hidden bg-[#fcfcfc] rounded-xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+            >
+                <div class="p-6 flex flex-col items-center">
+                    <div
+                            class="w-40 h-40 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center mb-4"
+                    >
+                        <img
+                                src="./logo.png"
+                                alt="MiTek Vietnam"
+                                class="max-h-full max-w-full object-contain"
+                        />
+                    </div>
+
+                    <h4 class="font-bold text-gray-900 text-base mb-4 text-center">
+                        MiTek Vietnam
+                    </h4>
+
+                    <div class="flex flex-wrap justify-center gap-2">
+              <span
+                      class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+              >C#</span
+              >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >.NET</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >JavaScript</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >Cybersecurity</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >TestComplete</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >Azure</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                        class="bg-gray-50/80 border-t border-gray-100 p-5 flex items-center justify-between text-xs text-gray-600"
+                >
+                    <span>Ho Chi Minh</span>
+                    <a
+                            href="#"
+                            class="font-bold text-gray-800 hover:text-red-600 flex items-center gap-1.5 transition-colors"
+                    >
+              <span
+                      class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
+              ></span>
+                        9 Jobs <i class="ph ph-caret-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div
+                    class="relative overflow-hidden bg-[#fcfcfc] rounded-xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+            >
+                <div class="p-6 flex flex-col items-center">
+                    <div
+                            class="w-40 h-40 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center mb-4"
+                    >
+                        <img
+                                src="./logo.png"
+                                alt="BIDV Securities Company (BSC)"
+                                class="max-h-full max-w-full object-contain"
+                        />
+                    </div>
+
+                    <h4 class="font-bold text-gray-900 text-base mb-4 text-center">
+                        BIDV Securities Company (BSC)
+                    </h4>
+
+                    <div class="flex flex-wrap justify-center gap-2">
+              <span
+                      class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+              >JavaScript</span
+              >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >Java</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >.NET</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >Database</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >Business Analysis</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >QA QC</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                        class="bg-gray-50/80 border-t border-gray-100 p-5 flex items-center justify-between text-xs text-gray-600"
+                >
+                    <span>Ha Noi - Ho Chi Minh</span>
+                    <a
+                            href="#"
+                            class="font-bold text-gray-800 hover:text-red-600 flex items-center gap-1.5 transition-colors"
+                    >
+              <span
+                      class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
+              ></span>
+                        3 Jobs <i class="ph ph-caret-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div
+                    class="relative overflow-hidden bg-[#fcfcfc] rounded-xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+            >
+                <div
+                        class="absolute top-0 right-0 w-28 h-28 overflow-hidden pointer-events-none"
+                >
+                    <div
+                            class="absolute top-5 -right-9 w-36 rotate-45 bg-orange-500 text-white text-[9px] font-bold py-1 text-center shadow-sm uppercase tracking-wider flex items-center justify-center gap-1"
+                    >
+                        <span>👑</span> TOP HIRING
+                    </div>
+                </div>
+
+                <div class="p-6 flex flex-col items-center">
+                    <div
+                            class="w-40 h-40 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center mb-4"
+                    >
+                        <img
+                                src="./logo.png"
+                                alt="MB Bank"
+                                class="max-h-full max-w-full object-contain"
+                        />
+                    </div>
+
+                    <h4 class="font-bold text-gray-900 text-base mb-4 text-center">
+                        MB Bank
+                    </h4>
+
+                    <div class="flex flex-wrap justify-center gap-2">
+              <span
+                      class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+              >Java</span
+              >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >JavaScript</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >Python</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >Oracle</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >AngularJS</span
+                        >
+                        <span
+                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                        >ReactJS</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                        class="bg-gray-50/80 border-t border-gray-100 p-5 flex items-center justify-between text-xs text-gray-600"
+                >
+                    <span>Ha Noi</span>
+                    <a
+                            href="#"
+                            class="font-bold text-gray-800 hover:text-red-600 flex items-center gap-1.5 transition-colors"
+                    >
+              <span
+                      class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
+              ></span>
+                        25 Jobs <i class="ph ph-caret-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

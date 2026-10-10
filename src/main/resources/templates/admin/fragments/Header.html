@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+<div th:fragment="header">
+
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 max-lg:px-5 max-md:px-4">
+
+        <!-- LEFT -->
+        <div class="flex items-center gap-8 max-lg:gap-5 max-md:gap-3">
+
+            <!-- MOBILE MENU BUTTON -->
+            <button id="openMenu" type="button"
+                    class="hidden max-md:flex w-10 h-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition">
+
+                <i class="ph ph-list text-xl"></i>
+
+            </button>
+
+            <div class="text-sm text-slate-500 flex items-center gap-2 " id="breadcrumbContainer">
+                <a th:href="@{/admin}" class="flex item-center gap-2 hover:text-blue-600 transition-colors">
+                    <i class="ph ph-house text-sm"></i>
+                    <span class="max-md:hidden">Admin Portal</span>
+                    <span class="hidden max-md:inline">Admin</span>
+                </a>
+                <i class="ph ph-caret-right text-xs text-slate-400"></i>
+                <span th:switch="${activeMenu}" class="font-medium text-slate-800">
+                    <span th:case="'dashboards'">
+                        Tổng quan
+                    </span>
+                    <span th:case="'users'">
+                        Quản lý User
+                    </span>
+                    <span th:case="'companies'">
+                        Quản lý Công ty
+                    </span>
+                    <span th:case="'domains'">
+                        Danh mục lĩnh vực
+                    </span>
+                    <span th:case="'jobs'">
+                        Quản lý Việc làm
+                    </span>
+                    <span th:case="'CVs'">
+                        Quản lý Hồ sơ & Ứng tuyển
+                    </span>
+                    <span th:case="'skills'">
+                        Quản lý các kỹ năng
+                    </span>
+                    <span th:case="'expertises'">
+                        Quản lý các chuyên môn
+                    </span>
+                     <span th:case="'categories'">
+                        Quản lý Danh mục
+                    </span>
+                     <span th:case="'blogs'">
+                       Quản lý Bài viết
+                    </span>
+                    <span th:case="'titles'">
+                        Quản lý Vị trí
+                    </span>
+                    <span th:case="*">
+                        Admin Portal
+                    </span>
+                </span>
+                <th:block th:if="${isAdd == true or isEdit == true}">
+                    <i class="ph ph-caret-right text-xs text-slate-400"></i>
+                    <span th:if="${isAdd == true}" class="font-medium text-slate-800">Thêm mới</span>
+                    <span th:if="${isEdit == true}" class="font-medium text-slate-800">Chỉnh sửa</span>
+                </th:block>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+        <div class="flex items-center gap-4 max-lg:gap-3 max-md:gap-2">
+
+            <!-- NOTIFICATION -->
+            <button class="relative p-2 text-slate-500 hover:bg-slate-100 rounded-full transition">
+
+                <i class="ph ph-bell text-lg"></i>
+
+                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+
+            </button>
+
+
+            <!-- HELP -->
+            <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition max-md:hidden">
+
+                <i class="ph ph-question text-lg"></i>
+
+            </button>
+
+
+            <!-- DIVIDER -->
+            <div class="w-px h-6 bg-slate-200 mx-2 max-lg:mx-1 max-md:hidden"></div>
+            <!-- USER -->
+            <div th:if="${session.account != null and session.account.role != null and session.account.role.name() == 'ADMIN'}"
+                 class="flex items-center gap-3 max-lg:gap-2">
+                <!-- USER INFO -->
+                <div class="text-right max-md:hidden">
+
+                    <p class="font-semibold text-sm leading-tight"
+                       th:text="${session.account.userName != null ? session.account.userName : 'Admin'}">
+                        Admin
+                    </p>
+                    <p class="text-[11px] text-blue-600 font-medium">
+                        <span th:text="${session.account.role != null ? session.account.role.name() : 'ADMIN'}">ADMIN</span>
+                    </p>
+                </div>
+                <!-- AVATAR -->
+                <img
+                        th:src="${session.account.avatar != null and !#strings.isEmpty(session.account.avatar)
+                            ? session.account.avatar
+                            : '/images/default-user.png'}"
+                        alt="Avatar"
+                        class="w-9 h-9 rounded-full border border-slate-200 object-cover max-md:w-8 max-md:h-8"
+                >
+
+            </div>
+
+        </div>
+
+    </header>
+
+</div>
+
+</body>
+</html>

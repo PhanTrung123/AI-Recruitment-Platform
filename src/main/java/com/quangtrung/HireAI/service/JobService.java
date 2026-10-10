@@ -1,0 +1,26 @@
+package com.quangtrung.HireAI.service;
+
+import com.quangtrung.HireAI.entity.Job;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface JobService {
+    public Job save(Job job);
+
+    Page<Job> findPaginated(Pageable pageable);
+
+    Page<Job> findByJobNameContaining(String name, Pageable pageable);
+
+    Optional<Job> findById(Long id);
+
+    Optional<Job> findByIdWithRelations(Long id);
+
+    void deleteById(Long id);
+
+    java.util.List<Job> findByJobDomain(Long domainId);
+
+    List<Job> findByCompanyId(Long companyId);
+}

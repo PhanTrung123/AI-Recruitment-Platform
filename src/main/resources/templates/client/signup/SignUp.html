@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout/ClientLayout}">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script th:src="@{/js/SignUp.js}"></script>
+    <title>Document</title>
+
+
+</head>
+<body>
+<div layout:fragment="content" class="my-8 max-w-xl mx-auto flex flex-col gap-4 px-4">
+    <h2 class="font-bold flex items-center gap-2 text-xl">
+        Welcome to
+        <img src="/images/logo.png" alt="RecruitOS" class="h-12 object-contain"/>
+    </h2>
+    <h1 class="font-bold text-3xl mb-2">Sign up</h1>
+    <div class="flex items-start gap-3 text-[15px] leading-relaxed">
+        <input type="checkbox" class="w-4 h-4 mt-1 rounded border-gray-300"/>
+        <span>
+          By signing up with Google, I agree to RecruitOS
+          <a href="#" class="text-blue-600 hover:underline"
+          >Terms & Conditions</a
+          >
+          and
+          <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
+          in relation to your privacy information.
+        </span>
+    </div>
+    <div class="w-full">
+        <button
+                class="border rounded-md w-full flex items-center justify-center gap-1 px-4 py-2"
+        >
+            <svg
+                    class="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                        fill="#4285F4"
+                        d="M21.35 12.27c0-.79-.07-1.55-.2-2.27H12v4.3h5.22a4.47 4.47 0 0 1-1.94 2.93v2.44h3.14c1.84-1.69 2.93-4.18 2.93-7.4z"
+                />
+                <path
+                        fill="#34A853"
+                        d="M12 21.96c2.63 0 4.84-.87 6.45-2.35l-3.14-2.44c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.52A9.74 9.74 0 0 0 12 21.96z"
+                />
+                <path
+                        fill="#FBBC05"
+                        d="M6.54 14.06A5.85 5.85 0 0 1 6.23 12c0-.71.12-1.4.31-2.06V7.42H3.3A9.99 9.99 0 0 0 2.25 12c0 1.65.4 3.21 1.05 4.58l3.24-2.52z"
+                />
+                <path
+                        fill="#EA4335"
+                        d="M12 5.91c1.43 0 2.72.49 3.73 1.46l2.8-2.8C16.84 2.98 14.63 2.04 12 2.04a9.74 9.74 0 0 0-8.7 5.38l3.24 2.52C7.31 7.63 9.46 5.91 12 5.91z"
+                />
+            </svg>
+            Sign up with Google
+        </button>
+    </div>
+    <div class="flex items-center gap-3 my-5">
+        <div class="flex-1 h-px bg-gray-300"></div>
+        <span class="text-sm text-gray-500">OR</span>
+        <div class="flex-1 h-px bg-gray-300"></div>
+    </div>
+    <form th:object="${sign_up}" th:action="@{/sign_up/save}" method="post">
+        <div class="flex flex-col gap-5">
+            <div class="flex flex-col gap-1.5">
+                <label class="font-semibold text-sm"
+                >Your Name <span class="text-red-500">*</span></label
+                >
+                <input
+                        type="text" id="id" th:field="*{id}"
+                        class="hidden"
+                />
+                <input
+                        type="text" th:field="*{userName}"
+                        placeholder="Enter your Name"
+                        class="required-input border border-gray-300 rounded-md px-3 py-2.5 w-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-gray-500 text-sm"
+                />
+                <p class="text-red-500" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="font-semibold text-sm"
+                >Email <span class="text-red-500">*</span></label
+                >
+                <input
+                        type="email" th:field="*{email}"
+                        placeholder="Enter your email"
+                        class="required-input border border-gray-300 rounded-md px-3 py-2.5 w-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-gray-500 text-sm"
+                />
+                <p class="text-red-500" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="font-semibold text-sm"
+                >Password <span class="text-red-500">*</span></label
+                >
+                <div>
+                    <div class="relative">
+                        <input
+                                type="password"
+                                id="passwordInput"
+                                th:field="*{password}"
+                                placeholder="Enter password"
+                                class="required-input border border-gray-300 rounded-md px-3 py-2.5 w-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-gray-500 text-sm pr-10"
+                        />
+                        <i class="ph ph-eye-slash absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg cursor-pointer hover:text-gray-600"></i>
+                    </div>
+                    <p class="text-red-500 text-sm mt-1" th:if="${#fields.hasErrors('password')}"
+                       th:errors="*{password}"></p>
+                </div>
+
+                <ul id="passwordRules" class="text-sm mt-1 space-y-1">
+                    <li class="password-rule flex items-center gap-2 text-gray-600" data-rule="length">
+                        <span class="rule-dot w-[5px] h-[5px] border border-current rounded-full"></span>
+                        At least 12 characters
+                    </li>
+                    <li class="password-rule flex items-center gap-2 text-gray-600" data-rule="symbol">
+                        <span class="rule-dot w-[5px] h-[5px] border border-current rounded-full"></span>
+                        At least 1 symbol (! @ # $ ...)
+                    </li>
+                    <li class="password-rule flex items-center gap-2 text-gray-600" data-rule="number">
+                        <span class="rule-dot w-[5px] h-[5px] border border-current rounded-full"></span>
+                        At least 1 number
+                    </li>
+                    <li class="password-rule flex items-center gap-2 text-gray-600" data-rule="uppercase">
+                        <span class="rule-dot w-[5px] h-[5px] border border-current rounded-full"></span>
+                        At least 1 UPPERCASE letter
+                    </li>
+                    <li class="password-rule flex items-center gap-2 text-gray-600" data-rule="lowercase">
+                        <span class="rule-dot w-[5px] h-[5px] border border-current rounded-full"></span>
+                        At least 1 lowercase letter
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex items-start gap-3 mt-4 text-[15px]">
+            <input
+                    type="checkbox"
+                    id="agree"
+                    class="w-4 h-4 mt-1 rounded border-gray-300"
+            />
+            <label for="agree" class="leading-relaxed">
+                I have read and agree to RecruitOS
+                <a href="#" class="text-blue-600 hover:underline"
+                >Terms & Conditions</a
+                >
+                and
+                <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>.
+            </label>
+        </div>
+        <button
+                type="submit"
+                id="submitBtn"
+                disabled
+                class="w-full bg-[#a3a3a3] text-white font-bold py-3.5 rounded-md mt-4 transition-colors text-lg cursor-not-allowed"
+        >
+            Sign up with Email
+        </button>
+        <p class="text-center mt-4">
+            Already have an account?
+            <a th:href="@{/login}" class="text-blue-600 font-semibold hover:underline"
+            >Sign in now!</a
+            >
+        </p>
+    </form>
+</div>
+
+</body>
+</html>
