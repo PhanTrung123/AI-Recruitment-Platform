@@ -5,7 +5,7 @@
             <span class="text-[14px] font-medium">Xin chào</span>
         </div>
         <p class="mt-1 truncate text-[18px] font-bold leading-6 text-gray-900"
-           th:text="${session.account != null ? session.account.userName : 'Khách'}"></p>
+           th:text="${session.account != null and session.account.userName != null ? session.account.userName : 'Khách'}"></p>
     </div>
 
     <div class="space-y-3 mb-5">

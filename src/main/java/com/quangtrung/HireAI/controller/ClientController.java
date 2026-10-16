@@ -1,13 +1,7 @@
 package com.quangtrung.HireAI.controller;
 
-import com.quangtrung.HireAI.dto.CompanyDTO;
-import com.quangtrung.HireAI.dto.DomainDTO;
-import com.quangtrung.HireAI.dto.ExpertiseDTO;
-import com.quangtrung.HireAI.dto.SkillDTO;
-import com.quangtrung.HireAI.service.CompanyService;
-import com.quangtrung.HireAI.service.DomainService;
-import com.quangtrung.HireAI.service.ExpertiseService;
-import com.quangtrung.HireAI.service.SkillService;
+import com.quangtrung.HireAI.dto.*;
+import com.quangtrung.HireAI.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +25,9 @@ public class ClientController {
 
     @Autowired
     CompanyService companyService;
+
+    @Autowired
+    TitleService titleService;
 
     @ModelAttribute("domains")
     public List<DomainDTO> getDomains() {
@@ -68,10 +65,15 @@ public class ClientController {
         }).toList();
     }
 
-//    @ModelAttribute("cities")
-//    public City[] getCities() {
-//        return City.values();
-//    }
+    @ModelAttribute("titles")
+    public List<TitleDTO> getTitles() {
+        return titleService.findAll().stream().map(item -> {
+            TitleDTO dto = new TitleDTO();
+            BeanUtils.copyProperties(item, dto);
+            return dto;
+        }).toList();
+    }
+
 
     @RequestMapping("/")
     public String showHome(Model model) {

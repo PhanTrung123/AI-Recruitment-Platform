@@ -43,7 +43,6 @@
                          aria-label="IT Jobs categories">
 
                         <div class="flex w-full flex-col lg:flex-row">
-                            <!-- CỘT BÊN TRÁI -->
                             <div class="flex flex-col border-r border-gray-200 lg:w-[280px] lg:shrink-0">
                                 <a href="#" onmouseenter="showCategoryTab('domain', this)"
                                    class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
@@ -84,7 +83,7 @@
                                     <a th:each="domain : ${domains}"
                                        th:href="@{/search/domain/{id}(id=${domain.domain_id})}"
                                        th:text="${domain.domainName}"
-                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
                                     </a>
                                 </div>
 
@@ -92,9 +91,9 @@
                                 <div id="tab-content-skill"
                                      class="category-content grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
                                     <a th:each="skill : ${skills}"
-                                       th:href="@{/jobs/skill/{id}(id=${skill.skill_id})}"
+                                       th:href="@{/search/skill/{id}(id=${skill.skill_id})}"
                                        th:text="${skill.skillName}"
-                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
                                     </a>
                                 </div>
 
@@ -102,23 +101,27 @@
                                 <div id="tab-content-expertise"
                                      class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
                                     <a th:each="expertise : ${expertises}"
-                                       th:href="@{/jobs/expertise/{id}(id=${expertise.expertisies_id})}"
+                                       th:href="@{/search/expertise/{id}(id=${expertise.expertisies_id})}"
                                        th:text="${expertise.ExpertiseName}"
-                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
                                     </a>
                                 </div>
 
                                 <!-- 4. Title -->
                                 <div id="tab-content-title"
                                      class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-                                    <span class="text-sm text-gray-500">Đang cập nhật Title...</span>
+                                    <a th:each="title : ${titles}"
+                                       th:href="@{/search/title/{id}(id=${title.title_id})}"
+                                       th:text="${title.titleName}"
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
+                                    </a>
                                 </div>
 
                                 <!-- 5. Company -->
                                 <div id="tab-content-company"
-                                     class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                                     class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4">
                                     <a th:each="company : ${companies}"
-                                       th:href="@{/jobs/company/{id}(id=${company.company_id})}"
+                                       th:href="@{/company/{id}(id=${company.company_id})}"
                                        th:title="${company.name}"
                                        class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
                                         <span th:text="${company.name}" class="truncate"></span>
@@ -131,7 +134,7 @@
                                     <a th:each="city : ${T(com.quangtrung.HireAI.enums.City).values()}"
                                        th:href="@{/jobs/city/{name}(name=${city.name()})}"
                                        th:text="${city.displayName}"
-                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
+                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
                                     </a>
                                 </div>
 
@@ -447,7 +450,7 @@
                  class="relative group/user ml-1 md:ml-2">
                 <button type="button"
                         class="flex items-center gap-2 cursor-pointer focus:outline-none">
-                    <img th:src="${session.account.avatar != null and !session.account.avatar.isEmpty()
+                    <img th:src="${session.account != null and session.account.avatar != null and !session.account.avatar.isEmpty()
                       ? session.account.avatar
                       : '/images/default-user.png'}"
                          alt="User Avatar"
@@ -458,7 +461,7 @@
 
                     <div class="bg-white rounded-xl shadow-xl overflow-hidden text-gray-900">
                         <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-200">
-                            <img th:src="${session.account.avatar != null and !session.account.avatar.isEmpty()
+                            <img th:src="${session.account != null and session.account.avatar != null and !session.account.avatar.isEmpty()
                               ? session.account.avatar
                               : '/images/default-user.png'}"
                                  alt="User Avatar"
@@ -466,10 +469,10 @@
                             <div class="flex flex-col min-w-0">
 
                     <span class="text-[17px] font-medium text-gray-900 truncate"
-                          th:text="${session.account.userName}">
+                          th:text="${session.account != null ? session.account.userName : 'User'}">
                     </span>
                                 <span class="text-sm text-gray-400 truncate"
-                                      th:text="${session.account.email}">
+                                      th:text="${session.account != null ? session.account.email : ''}">
                     </span>
 
                             </div>

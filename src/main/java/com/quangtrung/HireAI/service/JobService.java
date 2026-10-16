@@ -16,6 +16,8 @@ public interface JobService {
 
     Optional<Job> findById(Long id);
 
+    List<Job> findAll();
+
     Optional<Job> findByIdWithRelations(Long id);
 
     void deleteById(Long id);
@@ -23,4 +25,10 @@ public interface JobService {
     java.util.List<Job> findByJobDomain(Long domainId);
 
     List<Job> findByCompanyId(Long companyId);
+
+    List<Job> findBySkill(Long skillId);
+
+    List<Job> findByExpertise(Long expertisiesId);
+
+    List<Job> findByTitle(Long titleId);
 }

@@ -15,7 +15,8 @@ public class Blog {
     private Long blog_id;
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Lob
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     private String thumbnail;

@@ -10,6 +10,20 @@
 <body>
 <div layout:fragment="content" class="min-h-screen py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Success/Error Messages -->
+        <div th:if="${successMessage}" class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3">
+            <div class="flex items-center gap-2 text-green-800">
+                <i class="ph ph-check-circle text-xl"></i>
+                <span th:text="${successMessage}"></span>
+            </div>
+        </div>
+        <div th:if="${errorMessage}" class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
+            <div class="flex items-center gap-2 text-red-800">
+                <i class="ph ph-warning-circle text-xl"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </div>
+
         <div class="flex items-start gap-6">
             <div th:replace="client/dashboard/fragments/Sidebar :: sidebar"></div>
 
@@ -18,18 +32,17 @@
                     <div class="flex flex-col gap-6 lg:col-span-7">
                         <div class="rounded-2xl border border-[#d9dfe6] bg-white p-6 shadow-sm ">
                             <div class="flex  gap-4 flex-1">
-                                <div class="h-[80px] w-[80px] rounded-full flex items-center justify-center shadow-sm overflow-hidden">
-                                    <img th:src="${session.account.avatar != null and !session.account.avatar.isEmpty()
-                              ? session.account.avatar
-                              : '/images/default-user.png'}"
+                                <div class="h-[80px] w-[80px] rounded-full flex items-center justify-center shadow-sm overflow-hidden bg-gray-100">
+                                    <img th:src="${user.avatar != null and !#strings.isEmpty(user.avatar) ? user.avatar : '/images/default-user.png'}"
                                          alt="User Avatar"
-                                         class="rounded-full object-cover"/>
+                                         class="h-full w-full rounded-full object-contain"/>
                                 </div>
                                 <div class="flex flex-1 items-start justify-between">
                                     <div>
                                         <div class="flex items-center gap-3">
                                             <h1 class="text-[30px] font-bold leading-tight text-gray-900"
-                                                th:text="${session.account.userName}">
+                                                th:text="${user.userName != null ? user.userName : 'User'}">
+                                                User
                                             </h1>
                                         </div>
 
@@ -42,10 +55,11 @@
                                     </div>
 
                                     <button type="button"
+                                            id="openEditModalBtn"
                                             onclick="openModal()"
-                                            class="flex h-9 w-9 items-center justify-center rounded-lg text-red-500 transition hover:bg-red-50 hover:text-red-500"
+                                            class="flex h-9 w-9 items-center justify-center rounded-lg text-red-500 transition hover:bg-red-50 hover:text-red-500 cursor-pointer"
                                             title="Chỉnh sửa">
-                                        <i class="ph ph-note-pencil  text-[24px]"></i>
+                                        <i class="ph ph-note-pencil text-[24px]"></i>
                                     </button>
                                 </div>
 
@@ -60,40 +74,36 @@
                                 <!-- Email -->
                                 <div class="flex items-center gap-2.5 text-gray-600">
                                     <i class="ph ph-envelope-simple text-[18px] text-gray-400"></i>
-                                    <span class="truncate" th:text="${session.account.email}">Email</span>
+                                    <span class="truncate"
+                                          th:text="${user.email != null ? user.email : 'Email'}">Email</span>
                                 </div>
 
                                 <!-- Số điện thoại -->
                                 <div class="flex items-center gap-2.5 text-gray-600">
                                     <i class="ph ph-phone text-[18px] text-gray-400"></i>
-                                    <span>0708110429</span>
+                                    <span th:text="${user.phone != null ? user.phone : 'Chưa cập nhật'}">Số điện thoại</span>
                                 </div>
 
                                 <!-- Ngày sinh -->
                                 <div class="flex items-center gap-2.5 text-gray-600">
                                     <i class="ph ph-cake text-[18px] text-gray-400"></i>
-                                    <span>Ngày sinh</span>
+                                    <span th:text="${user.dateOfBirth != null ? #temporals.format(user.dateOfBirth, 'dd/MM/yyyy') : 'Chưa cập nhật'}">Ngày sinh</span>
                                 </div>
 
                                 <!-- Giới tính -->
                                 <div class="flex items-center gap-2.5 text-gray-600">
                                     <i class="ph ph-user text-[18px] text-gray-400"></i>
-                                    <span th:text="${session.account.gender != null and !session.account.gender.isEmpty()
-                           ? session.account.gender
-                           : 'Giới tính'}">Giới tính</span>
+                                    <span th:text="${user.gender != null ? user.gender : 'Chưa cập nhật'}">
+                                        Giới tính
+                                    </span>
                                 </div>
 
                                 <!-- Địa chỉ hiện tại -->
                                 <div class="flex items-center gap-2.5 text-gray-600">
                                     <i class="ph ph-map-pin text-[18px] text-gray-400"></i>
-                                    <span>Địa chỉ hiện tại</span>
+                                    <span th:text="${user.address != null ? user.address : 'Chưa cập nhật'}">Địa chỉ hiện tại</span>
                                 </div>
 
-                                <!-- Link cá nhân -->
-                                <div class="flex items-center gap-2.5 text-gray-600">
-                                    <i class="ph ph-globe text-[18px] text-gray-400"></i>
-                                    <span>Link cá nhân</span>
-                                </div>
                             </div>
 
                         </div>
@@ -119,152 +129,244 @@
                             </div>
                         </div>
                         <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+
                             <div>
+
                                 <div class="flex items-center gap-2">
+
                                     <h2 class="text-[18px] font-bold text-gray-900">Học vấn</h2>
+
                                     <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+
                                 </div>
+
                                 <p class="mt-1 text-[14px] text-gray-400">
+
                                     Chia sẻ trình độ học vấn của bạn
+
                                 </p>
+
                             </div>
+
                             <div class="flex items-center gap-3">
+
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+
                                     <i class="ph ph-graduation-cap text-[22px]"></i>
+
                                 </div>
+
                                 <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+
                                     <i class="ph ph-plus-circle text-[26px]"></i>
+
                                 </button>
+
                             </div>
+
                         </div>
+
                         <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+
                             <div>
+
                                 <div class="flex items-center gap-2">
+
                                     <h2 class="text-[18px] font-bold text-gray-900">Kinh nghiệm làm việc</h2>
+
                                     <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 30%</span>
+
                                 </div>
+
                                 <p class="mt-1 text-[14px] text-gray-400">
+
                                     Thể hiện những thông tin chi tiết về quá trình làm việc
+
                                 </p>
+
                             </div>
+
                             <div class="flex items-center gap-3">
+
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+
                                     <i class="ph ph-briefcase text-[22px]"></i>
+
                                 </div>
+
                                 <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+
                                     <i class="ph ph-plus-circle text-[26px]"></i>
+
                                 </button>
+
                             </div>
+
                         </div>
+
                         <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+
                             <div>
+
                                 <div class="flex items-center gap-2">
+
                                     <h2 class="text-[18px] font-bold text-gray-900">Kỹ năng</h2>
+
                                     <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 20%</span>
+
                                 </div>
+
                                 <p class="mt-1 text-[14px] text-gray-400"
+
                                 >
+
                                     Liệt kê các kỹ năng chuyên môn của bạn
+
                                 </p>
+
                             </div>
+
                             <div class="flex items-center gap-3">
+
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+
                                     <i class="ph ph-gear-six text-[22px]"></i>
+
                                 </div>
+
                                 <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+
                                     <i class="ph ph-plus-circle text-[26px]"></i>
+
                                 </button>
+
                             </div>
+
                         </div>
+
                         <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+
                             <div>
+
                                 <div class="flex items-center gap-2">
+
                                     <h2 class="text-[18px] font-bold text-gray-900">Ngoại ngữ</h2>
+
                                     <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 10%</span>
+
                                 </div>
+
                                 <p class="mt-1 text-[14px] text-gray-400"
+
                                 >
+
                                     Liệt kê các ngôn ngữ mà bạn biết
+
                                 </p>
+
                             </div>
+
                             <div class="flex items-center gap-3">
+
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+
                                     <i class="ph ph-translate text-[22px]"></i>
+
                                 </div>
+
                                 <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+
                                     <i class="ph ph-plus-circle text-[26px]"></i>
+
                                 </button>
+
                             </div>
+
                         </div>
 
-                        <!-- 7. DỰ ÁN NỔI BẬT -->
                         <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+
                             <div>
+
                                 <div class="flex items-center gap-2">
+
                                     <h2 class="text-[18px] font-bold text-gray-900">Dự án nổi bật</h2>
+
                                     <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+
                                 </div>
+
                                 <p class="mt-1 text-[14px] text-gray-400"
+
                                 >
+
                                     Giới thiệu dự án nổi bật của bạn
+
                                 </p>
+
                             </div>
+
                             <div class="flex items-center gap-3">
+
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+
                                     <i class="ph ph-folder-open text-[22px]"></i>
+
                                 </div>
+
                                 <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+
                                     <i class="ph ph-plus-circle text-[26px]"></i>
+
                                 </button>
+
                             </div>
+
                         </div>
 
                         <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
+
                             <div>
+
                                 <div class="flex items-center gap-2">
+
                                     <h2 class="text-[18px] font-bold text-gray-900">Chứng chỉ</h2>
+
                                     <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
+
                                 </div>
+
                                 <p class="mt-1 text-[14px] text-gray-400"
+
                                 >
+
                                     Bổ sung chứng chỉ liên quan đến kỹ năng của bạn
+
                                 </p>
+
                             </div>
+
                             <div class="flex items-center gap-3">
+
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
+
                                     <i class="ph ph-certificate text-[22px]"></i>
+
                                 </div>
+
                                 <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
+
                                     <i class="ph ph-plus-circle text-[26px]"></i>
+
                                 </button>
+
                             </div>
+
                         </div>
 
-                        <!-- 9. GIẢI THƯỞNG -->
-                        <div class="rounded-2xl border border-[#d9dfe6] bg-white p-5 shadow-sm flex items-center justify-between">
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <h2 class="text-[18px] font-bold text-gray-900">Giải thưởng</h2>
-                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-600">↑ 5%</span>
-                                </div>
-                                <p class="mt-1 text-[14px] text-gray-400"
-                                >
-                                    Thể hiện giải thưởng hoặc thành tích mà bạn đạt được
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 text-pink-300">
-                                    <i class="ph ph-trophy text-[22px]"></i>
-                                </div>
-                                <button type="button" class="text-red-500 hover:text-red-600 transition" title="Thêm">
-                                    <i class="ph ph-plus-circle text-[26px]"></i>
-                                </button>
-                            </div>
-                        </div>
                     </div>
 
-
-                    <div class="rounded-2xl border border-[#d9dfe6] bg-white p-6 shadow-sm lg:col-span-5 h-fit">
+                    <div class="lg:col-span-5 h-fit">
                         <div class="rounded-[20px] border border-[#f6d7d7] bg-[#fef1f0] p-4 shadow-sm">
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3">
@@ -275,25 +377,10 @@
                                 </div>
                             </div>
 
-                            <!--                            <div class="mt-4 flex items-center justify-between rounded-[14px] border border-[#f5c2c7] bg-[#fff4f4] p-3">-->
-                            <!--                                <div class="flex items-center gap-3">-->
-                            <!--                                    <div class="flex h-7 w-7 items-center justify-center rounded-full bg-[#fbe1e4] text-[#ef4444]">-->
-                            <!--                                        <i class="ph ph-check text-[18px]"></i>-->
-                            <!--                                    </div>-->
-                            <!--                                    <span class="text-[18px] font-semibold text-[#1f2937]">Độ hoàn thiện hồ sơ</span>-->
-                            <!--                                </div>-->
-                            <!--                                <div class="flex items-center gap-2">-->
-                            <!--                                    <span class="text-[22px] font-bold text-[#ef4444]">5%</span>-->
-                            <!--                                    <div class="flex h-7 w-7 items-center justify-center rounded-full border border-[#ef4444] bg-[#fdf2f2] text-[#ef4444]">-->
-                            <!--                                        <i class="ph ph-star text-[16px]"></i>-->
-                            <!--                                    </div>-->
-                            <!--                                </div>-->
-                            <!--                            </div>-->
-
                             <div class="mt-5 space-y-4">
-                                <span>
-                                    Nâng cấp hồ sơ của bạn lên 70% để bắt đầu tạo mẫu CV IT chuyên nghiệp.
-                                </span>
+            <span>
+                Nâng cấp hồ sơ của bạn lên 70% để bắt đầu tạo mẫu CV IT chuyên nghiệp.
+            </span>
                                 <div class="flex items-center justify-between gap-3 text-[17px] font-medium text-[#1f2937]">
                                     <div class="flex items-center gap-3">
                                         <div class="flex h-6 w-6 items-center justify-center rounded-full border border-[#1f2937] bg-white text-[#111827]">
@@ -326,7 +413,7 @@
                             </div>
 
                             <button type="button"
-                                    class="mt-6 w-full rounded-lg bg-[#e11d48] py-4 text-center text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d11d43]">
+                                    class="mt-6 w-full rounded-lg bg-[#e11d48] py-4 text-center text-[18px] font-bold text-white shadow-sm transition hover:bg-[#d11d43] cursor-pointer">
                                 Xem và Tải CV
                             </button>
                         </div>
@@ -352,7 +439,7 @@
                             </div>
 
                             <button type="button"
-                                    class="mt-6 w-full rounded-lg border border-[#ef4444] bg-white py-3 text-center text-[18px] font-bold text-[#e11d48] transition hover:bg-red-50">
+                                    class="mt-6 w-full rounded-lg border border-[#ef4444] bg-white py-3 text-center text-[18px] font-bold text-[#e11d48] transition hover:bg-red-50 cursor-pointer">
                                 Điền hồ sơ tự động
                             </button>
                         </div>
@@ -361,10 +448,94 @@
             </main>
         </div>
     </div>
-</div>
 
-<!-- Edit Profile Modal -->
-<div th:replace="client/dashboard/ModalEditProfile :: editProfileModal"></div>
-<script th:src="@{/js/modalEditProfile.js}"></script>
+    <div th:replace="client/dashboard/ModalEditProfile :: editProfileModal"></div>
+
+    <script>
+        window.openModal = function () {
+            console.log('Global openModal called');
+            const modalElement = document.getElementById('editProfileModal');
+            if (modalElement) {
+                modalElement.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                // Reset delete avatar flag when opening modal
+                document.getElementById('deleteAvatarFlag').value = 'false';
+                console.log('Modal opened successfully');
+            } else {
+                console.error('Không tìm thấy element #editProfileModal trong DOM');
+            }
+        };
+
+        window.closeModal = function () {
+            console.log('Global closeModal called');
+            const modalElement = document.getElementById('editProfileModal');
+            if (modalElement) {
+                modalElement.classList.add('hidden');
+                document.body.style.overflow = '';
+                console.log('Modal closed');
+            }
+        };
+
+        // Handle avatar file selection
+        document.addEventListener('DOMContentLoaded', function () {
+            const avatarFileInput = document.getElementById('avatarFileInput');
+            const deleteAvatarBtn = document.getElementById('deleteAvatarBtn');
+
+            if (avatarFileInput) {
+                avatarFileInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Update avatar preview
+                        const avatarImg = document.querySelector('#editProfileModal img');
+                        if (avatarImg) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                avatarImg.src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                });
+            }
+
+            if (deleteAvatarBtn) {
+                deleteAvatarBtn.addEventListener('click', function () {
+                    // Set delete flag
+                    document.getElementById('deleteAvatarFlag').value = 'true';
+                    // Reset avatar preview to default
+                    const avatarImg = document.querySelector('#editProfileModal img');
+                    if (avatarImg) {
+                        avatarImg.src = '/images/default-user.png';
+                    }
+                    // Reset file input
+                    if (avatarFileInput) {
+                        avatarFileInput.value = '';
+                    }
+                });
+            }
+
+            const backdrop = document.getElementById('modalBackdrop');
+            const closeBtns = document.querySelectorAll('.closeModalBtn');
+
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', window.closeModal);
+            });
+
+            if (backdrop) {
+                backdrop.addEventListener('click', window.closeModal);
+            }
+
+            document.addEventListener('keydown', (e) => {
+                const modalElement = document.getElementById('editProfileModal');
+                if (e.key === 'Escape' && modalElement && !modalElement.classList.contains('hidden')) {
+                    window.closeModal();
+                }
+            });
+
+            console.log('Modal script initialized successfully');
+        });
+
+    </script>
+</div>
 </body>
 </html>

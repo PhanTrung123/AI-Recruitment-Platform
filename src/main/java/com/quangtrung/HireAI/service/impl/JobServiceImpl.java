@@ -38,6 +38,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<Job> findAll() {
+        return jobRepository.findAll();
+    }
+
+    @Override
     public Optional<Job> findByIdWithRelations(Long id) {
         return jobRepository.findByIdWithRelations(id);
     }
@@ -55,5 +60,20 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<Job> findByCompanyId(Long companyId) {
         return jobRepository.findByCompanyId(companyId);
+    }
+
+    @Override
+    public List<Job> findBySkill(Long skillId) {
+        return jobRepository.findBySkill(skillId);
+    }
+
+    @Override
+    public List<Job> findByExpertise(Long expertisiesId) {
+        return jobRepository.findByExpertise(expertisiesId);
+    }
+
+    @Override
+    public List<Job> findByTitle(Long titleId) {
+        return jobRepository.findByTitle(titleId);
     }
 }

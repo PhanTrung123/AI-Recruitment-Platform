@@ -14,6 +14,8 @@ public class Company {
     private Long company_id;
     private String name;
     private String logo;
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String website;
     private String size;

@@ -1,36 +1,147 @@
 package com.quangtrung.HireAI.controller;
 
+import com.quangtrung.HireAI.dto.SessionUserDTO;
 import com.quangtrung.HireAI.dto.UserDTO;
+import com.quangtrung.HireAI.entity.CV;
 import com.quangtrung.HireAI.entity.User;
+import com.quangtrung.HireAI.service.CVService;
 import com.quangtrung.HireAI.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/dashboard")
 public class ProfileController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping({"/dashboard", "/dashboard/{section}"})
-    public String dashboard(@PathVariable(required = false) String section, Model model) {
+    @Autowired
+    CVService cvService;
+
+    @GetMapping({"", "/{section}"})
+    public String dashboard(@PathVariable(required = false) String section, Model model, HttpSession session) {
         String activeItem = resolveActiveItem(section);
         model.addAttribute("activeItem", activeItem);
         model.addAttribute("pageTitle", resolvePageTitle(activeItem));
 
-        if ("profile".equals(activeItem)) {
-            return "client/dashboard/Profile";
+        SessionUserDTO sessionUser = (SessionUserDTO) session.getAttribute("account");
+        if (sessionUser == null) {
+            return "redirect:/login";
         }
 
+        Optional<User> userOpt = userService.findById(sessionUser.getId());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            Optional<CV> latestCV = cvService.getLatestCVByUser(user);
+            model.addAttribute("latestCV", latestCV.orElse(null));
+        }
+
+        if ("profile".equals(activeItem)) {
+            UserDTO dto = new UserDTO();
+            if (userOpt.isPresent()) {
+                BeanUtils.copyProperties(userOpt.get(), dto);
+            } else {
+                dto.setId(sessionUser.getId());
+                dto.setUserName(sessionUser.getUserName());
+                dto.setEmail(sessionUser.getEmail());
+                dto.setAvatar(sessionUser.getAvatar());
+                dto.setGender(sessionUser.getGender());
+                dto.setDateOfBirth(sessionUser.getDateOfBirth());
+                dto.setAddress(sessionUser.getAddress());
+                dto.setPersonalLink(sessionUser.getPersonalLink());
+            }
+            model.addAttribute("user", dto);
+
+            return "client/dashboard/Profile";
+        }
         return "client/dashboard/Dashboard";
+    }
+
+    @PostMapping("/profile/edit")
+    public String updateProfile(@ModelAttribute("user") UserDTO userDTO,
+                                @RequestParam(value = "deleteAvatar", required = false, defaultValue = "false") String deleteAvatar,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+        userDTO.setIsEdit(true);
+        SessionUserDTO sessionUser = (SessionUserDTO) session.getAttribute("account");
+        if (sessionUser == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            userService.updateProfile(sessionUser.getId(), userDTO, userDTO.getAvatarFile(), "true".equals(deleteAvatar));
+
+            User updatedUser = userService.findById(sessionUser.getId()).orElse(null);
+            if (updatedUser != null) {
+                SessionUserDTO newSessionUser = new SessionUserDTO();
+                BeanUtils.copyProperties(updatedUser, newSessionUser);
+                session.setAttribute("account", newSessionUser);
+            }
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thông tin thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Cập nhật thất bại: " + e.getMessage());
+        }
+
+        return "redirect:/dashboard/profile";
+    }
+
+    @PostMapping("/cv/upload")
+    @ResponseBody
+    public Map<String, Object> uploadCV(@RequestParam("file") MultipartFile file, HttpSession session) {
+        Map<String, Object> response = new java.util.HashMap<>();
+        SessionUserDTO sessionUser = (SessionUserDTO) session.getAttribute("account");
+
+        if (sessionUser == null) {
+            response.put("success", false);
+            response.put("message", "Vui lòng đăng nhập để tải lên CV");
+            return response;
+        }
+
+        if (file.isEmpty()) {
+            response.put("success", false);
+            response.put("message", "Vui lòng chọn file CV");
+            return response;
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || (!contentType.equals("application/pdf") &&
+                !contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
+            response.put("success", false);
+            response.put("message", "Chỉ chấp nhận file PDF hoặc DOCX");
+            return response;
+        }
+
+        try {
+            Optional<User> userOpt = userService.findById(sessionUser.getId());
+            if (userOpt.isPresent()) {
+                System.out.println("--> Đang tiến hành lưu CV cho user ID: " + userOpt.get().getId());
+
+                CV cv = cvService.uploadCV(file, userOpt.get());
+
+                System.out.println("--> Lưu CV thành công, ID bản ghi: " + cv.getCvs_id());
+
+                response.put("success", true);
+                response.put("message", "Tải lên CV thành công");
+                response.put("cv", cv);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // In lỗi chi tiết ra console IntelliJ/Eclipse
+            response.put("success", false);
+            response.put("message", "Lỗi khi tải lên CV: " + e.getMessage());
+        }
+
+        return response;
     }
 
     private String resolveActiveItem(String section) {
@@ -80,20 +191,5 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/edit/{id}")
-    public ModelAndView editProfile(ModelMap model, @PathVariable("id") Long id) {
-        Optional<User> opt = userService.findById(id);
-        UserDTO dto = new UserDTO();
-
-        if (opt.isPresent()) {
-            User entity = opt.get();
-            BeanUtils.copyProperties(entity, dto);
-            dto.setIsEdit(true);
-            model.addAttribute("user", dto);
-            return new ModelAndView("client/dashboard/Profile", model);
-        }
-        model.addAttribute("message", "User is not existed!");
-        return new ModelAndView("redirect:/dashboard/profile", model);
-    }
 }
 

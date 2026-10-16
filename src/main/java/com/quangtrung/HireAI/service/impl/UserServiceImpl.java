@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -129,6 +131,59 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+
+
+    @Override
+    @Transactional
+    public void updateProfile(Long id, UserDTO userDTO, MultipartFile avatarFile, boolean deleteAvatar) {
+        Optional<User> opt = userRepository.findById(id);
+        if (opt.isPresent()) {
+            User user = opt.get();
+            if (userDTO.getUserName() != null) {
+                user.setUserName(userDTO.getUserName());
+                System.out.println("Updated userName to: " + userDTO.getUserName());
+            }
+            if (userDTO.getPhone() != null) {
+                user.setPhone(userDTO.getPhone());
+                System.out.println("Updated phone to: " + userDTO.getPhone());
+            }
+            if (userDTO.getDateOfBirth() != null) {
+                user.setDateOfBirth(userDTO.getDateOfBirth());
+                System.out.println("Updated dateOfBirth to: " + userDTO.getDateOfBirth());
+            }
+            if (userDTO.getGender() != null) {
+                user.setGender(userDTO.getGender());
+                System.out.println("Updated gender to: " + userDTO.getGender());
+            }
+            if (userDTO.getAddress() != null) {
+                user.setAddress(userDTO.getAddress());
+                System.out.println("Updated address to: " + userDTO.getAddress());
+            }
+            if (userDTO.getPersonalLink() != null) {
+                user.setPersonalLink(userDTO.getPersonalLink());
+                System.out.println("Updated personalLink to: " + userDTO.getPersonalLink());
+            }
+
+            if (deleteAvatar) {
+                user.setAvatar(null);
+            } else if (avatarFile != null && !avatarFile.isEmpty()) {
+                try {
+                    String originalFilename = avatarFile.getOriginalFilename();
+                    String sanitizedFilename = System.currentTimeMillis() + "_" + originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
+                    String fileName = sanitizedFilename;
+                    String filePath = UPLOAD_DIR + fileName;
+                    Path path = java.nio.file.Paths.get(filePath);
+                    Files.copy(avatarFile.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    user.setAvatar("/uploads/" + fileName);
+                } catch (Exception e) {
+                    throw new RuntimeException("Lỗi khi upload avatar: " + e.getMessage());
+                }
+            }
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("Không tìm thấy người dùng với ID: " + id);
+        }
     }
 
     @Override

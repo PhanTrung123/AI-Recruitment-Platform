@@ -24,10 +24,19 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             """)
     Optional<Job> findByIdWithRelations(@Param("id") Long id);
 
-    @Query("SELECT DISTINCT j FROM Job j JOIN j.jobDomains jd JOIN FETCH j.company WHERE jd.domain.domain_id = :domainId")
+    @Query("SELECT DISTINCT j FROM Job j LEFT JOIN FETCH j.company LEFT JOIN FETCH j.jobDomains jd LEFT JOIN FETCH jd.domain WHERE j IN (SELECT j2 FROM Job j2 JOIN j2.jobDomains jd2 WHERE jd2.domain.domain_id = :domainId)")
     List<Job> findByJobDomains(@Param("domainId") Long domainId);
 
-    @Query("SELECT j FROM Job j JOIN FETCH j.company WHERE j.company.company_id = :companyId")
+    @Query("SELECT DISTINCT j FROM Job j LEFT JOIN FETCH j.company LEFT JOIN FETCH j.skillJobs sj LEFT JOIN FETCH sj.skill WHERE j.company.company_id = :companyId")
     List<Job> findByCompanyId(@Param("companyId") Long companyId);
+
+    @Query("SELECT DISTINCT j FROM Job j LEFT JOIN FETCH j.company LEFT JOIN FETCH j.skillJobs sj LEFT JOIN FETCH sj.skill WHERE j IN (SELECT j2 FROM Job j2 JOIN j2.skillJobs sj2 WHERE sj2.skill.skill_id = :skillId)")
+    List<Job> findBySkill(@Param("skillId") Long skillId);
+
+    @Query("SELECT DISTINCT j FROM Job j LEFT JOIN FETCH j.company LEFT JOIN FETCH j.skillJobs sj LEFT JOIN FETCH sj.skill WHERE j.expertise.expertisies_id = :expertisiesId")
+    List<Job> findByExpertise(@Param("expertisiesId") Long expertisiesId);
+
+    @Query("SELECT DISTINCT j FROM Job j LEFT JOIN FETCH j.company LEFT JOIN FETCH j.skillJobs sj LEFT JOIN FETCH sj.skill WHERE j.title.title_id = :titleId")
+    List<Job> findByTitle(@Param("titleId") Long titleId);
 
 }

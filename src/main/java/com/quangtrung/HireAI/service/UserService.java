@@ -6,6 +6,7 @@ import com.quangtrung.HireAI.dto.UserDTO;
 import com.quangtrung.HireAI.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -26,6 +27,8 @@ public interface UserService {
     Page<User> findByUserNameContaining(String name, Pageable pageable);
 
     Optional<User> findById(Long id);
+
+    void updateProfile(Long id, UserDTO userDTO, MultipartFile avatarFile, boolean deleteAvatar);
 
     void deleteById(Long id);
 }
