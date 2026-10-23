@@ -15,5 +15,9 @@ public interface CVService {
 
     List<CV> getCVsByUser(User user);
 
+    Optional<CV> findById(Long id);
+
+    CV save(CV cv);
+
     void deleteCV(Long id);
 }

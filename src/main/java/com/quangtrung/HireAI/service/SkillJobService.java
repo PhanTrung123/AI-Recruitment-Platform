@@ -4,4 +4,6 @@ import com.quangtrung.HireAI.entity.SkillJob;
 
 public interface SkillJobService {
     public SkillJob save(SkillJob skillJob);
+
+    void deleteByJobId(Long jobId);
 }

@@ -3,6 +3,7 @@ package com.quangtrung.HireAI.controller;
 import com.quangtrung.HireAI.dto.SessionUserDTO;
 import com.quangtrung.HireAI.dto.UserDTO;
 import com.quangtrung.HireAI.entity.CV;
+import com.quangtrung.HireAI.entity.MyJob;
 import com.quangtrung.HireAI.entity.User;
 import com.quangtrung.HireAI.service.CVService;
 import com.quangtrung.HireAI.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,6 +29,9 @@ public class ProfileController {
 
     @Autowired
     CVService cvService;
+
+    @Autowired
+    com.quangtrung.HireAI.service.MyJobService myJobService;
 
     @GetMapping({"", "/{section}"})
     public String dashboard(@PathVariable(required = false) String section, Model model, HttpSession session) {
@@ -58,11 +63,31 @@ public class ProfileController {
                 dto.setGender(sessionUser.getGender());
                 dto.setDateOfBirth(sessionUser.getDateOfBirth());
                 dto.setAddress(sessionUser.getAddress());
+                dto.setPhone(sessionUser.getPhone());
                 dto.setPersonalLink(sessionUser.getPersonalLink());
             }
             model.addAttribute("user", dto);
 
             return "client/dashboard/Profile";
+        }
+
+        if ("my-jobs".equals(activeItem)) {
+            if (userOpt.isPresent()) {
+                try {
+                    long appliedJobCount = myJobService.countByUser(userOpt.get());
+                    model.addAttribute("appliedJobCount", appliedJobCount);
+                    List<MyJob> appliedJobs = myJobService.findByUser(userOpt.get());
+                    model.addAttribute("appliedJobs", appliedJobs);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    model.addAttribute("appliedJobCount", 0);
+                    model.addAttribute("appliedJobs", new java.util.ArrayList<>());
+                }
+            } else {
+                model.addAttribute("appliedJobCount", 0);
+                model.addAttribute("appliedJobs", new java.util.ArrayList<>());
+            }
+            return "client/dashboard/MyJob";
         }
         return "client/dashboard/Dashboard";
     }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,6 +41,15 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(accountDTO, user);
         user.setPassword(bCryptPasswordEncoder.encode(accountDTO.getPassword()));
         user.setRole(Role.USER);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User save(AccountDTO accountDTO, Role role) {
+        User user = new User();
+        BeanUtils.copyProperties(accountDTO, user);
+        user.setPassword(bCryptPasswordEncoder.encode(accountDTO.getPassword()));
+        user.setRole(role);
         return userRepository.save(user);
     }
 
@@ -133,6 +143,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
+    @Override
+    public Optional<User> findByUserName(String userName) {
+        return userRepository.findByUserName(userName);
+    }
 
     @Override
     @Transactional
@@ -191,5 +205,22 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public List<User> findByRole(Role role) {
+        return userRepository.findByRole(role);
+    }
+
+    @Override
+    @Transactional
+    public void updateRole(Long userId, Role role) {
+        Optional<User> opt = userRepository.findById(userId);
+        if (opt.isPresent()) {
+            User user = opt.get();
+            user.setRole(role);
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("Không tìm thấy người dùng với ID: " + userId);
+        }
+    }
 
 }

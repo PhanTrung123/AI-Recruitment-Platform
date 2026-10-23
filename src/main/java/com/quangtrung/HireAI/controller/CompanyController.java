@@ -2,7 +2,10 @@ package com.quangtrung.HireAI.controller;
 
 import com.quangtrung.HireAI.dto.CompanyDTO;
 import com.quangtrung.HireAI.entity.Company;
+import com.quangtrung.HireAI.entity.User;
+import com.quangtrung.HireAI.enums.Role;
 import com.quangtrung.HireAI.service.CompanyService;
+import com.quangtrung.HireAI.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -26,6 +30,8 @@ public class CompanyController {
     @Autowired
     CompanyService companyService;
 
+    @Autowired
+    UserService userService;
 
     @GetMapping("")
     public String showCompanies(Model model, @RequestParam(name = "name", required = false) String name,
@@ -51,6 +57,8 @@ public class CompanyController {
         model.addAttribute("company", new CompanyDTO());
         model.addAttribute("isAdd", true);
         model.addAttribute("activeMenu", "companies");
+        List<User> recruiters = userService.findByRole(Role.RECRUITER);
+        model.addAttribute("recruiters", recruiters);
         return "admin/companies/Modal";
     }
 
@@ -61,11 +69,32 @@ public class CompanyController {
             model.addAttribute("isAdd", dto.getCompany_id() == null);
             model.addAttribute("isEdit", dto.getIsEdit());
             model.addAttribute("activeMenu", "companies");
+            List<User> recruiters = userService.findByRole(Role.RECRUITER);
+            model.addAttribute("recruiters", recruiters);
             return new ModelAndView("admin/companies/Modal", model);
         }
-        Company entity = new Company();
-        BeanUtils.copyProperties(dto, entity);
-        companyService.save(entity);
+
+        if (dto.getUserId() != null) {
+            User user = userService.findById(dto.getUserId()).orElse(null);
+            if (user == null) {
+                bindingResult.rejectValue("userId", "error.userId", "Không tìm thấy người dùng!");
+                List<User> recruiters = userService.findByRole(Role.RECRUITER);
+                model.addAttribute("recruiters", recruiters);
+                model.addAttribute("company", dto);
+                model.addAttribute("activeMenu", "companies");
+                return new ModelAndView("admin/companies/Modal", model);
+            }
+            if (user.getRole() != Role.RECRUITER) {
+                bindingResult.rejectValue("userId", "error.userId", "Người dùng phải có vai trò RECRUITER!");
+                List<User> recruiters = userService.findByRole(Role.RECRUITER);
+                model.addAttribute("recruiters", recruiters);
+                model.addAttribute("company", dto);
+                model.addAttribute("activeMenu", "companies");
+                return new ModelAndView("admin/companies/Modal", model);
+            }
+        }
+
+        companyService.saveFromDTO(dto);
         return new ModelAndView("redirect:/admin/companies", model);
     }
 
@@ -77,10 +106,17 @@ public class CompanyController {
         if (opt.isPresent()) {
             Company entity = opt.get();
             BeanUtils.copyProperties(entity, dto);
+            if (entity.getUser() != null) {
+                dto.setUserId(entity.getUser().getId());
+                dto.setUserName(entity.getUser().getUserName());
+                dto.setUserEmail(entity.getUser().getEmail());
+            }
             dto.setIsEdit(true);
             model.addAttribute("company", dto);
             model.addAttribute("isEdit", true);
             model.addAttribute("activeMenu", "companies");
+            List<User> recruiters = userService.findByRole(Role.RECRUITER);
+            model.addAttribute("recruiters", recruiters);
             return new ModelAndView("admin/companies/Modal", model);
         }
         model.addAttribute("message", "Company is not existed");
@@ -91,6 +127,41 @@ public class CompanyController {
     public ModelAndView delete(ModelMap model, @PathVariable("company_id") Long id) {
         companyService.deleteById(id);
         model.addAttribute("message", "Company is deleted!");
+        return new ModelAndView("redirect:/admin/companies", model);
+    }
+
+    @GetMapping("/approve/{company_id}")
+    public ModelAndView approve(ModelMap model, @PathVariable("company_id") Long id) {
+        Optional<Company> opt = companyService.findById(id);
+        if (opt.isPresent()) {
+            Company company = opt.get();
+            company.setStatus(com.quangtrung.HireAI.enums.CompanyStatus.APPROVED);
+            companyService.save(company);
+            
+            // Upgrade user role to RECRUITER
+            if (company.getUser() != null) {
+                userService.updateRole(company.getUser().getId(), Role.RECRUITER);
+            }
+            
+            model.addAttribute("message", "Company approved successfully!");
+        } else {
+            model.addAttribute("message", "Company not found!");
+        }
+        return new ModelAndView("redirect:/admin/companies", model);
+    }
+
+    @GetMapping("/reject/{company_id}")
+    public ModelAndView reject(ModelMap model, @PathVariable("company_id") Long id) {
+        Optional<Company> opt = companyService.findById(id);
+        if (opt.isPresent()) {
+            Company company = opt.get();
+            company.setStatus(com.quangtrung.HireAI.enums.CompanyStatus.REJECTED);
+            companyService.save(company);
+            
+            model.addAttribute("message", "Company rejected successfully!");
+        } else {
+            model.addAttribute("message", "Company not found!");
+        }
         return new ModelAndView("redirect:/admin/companies", model);
     }
 }

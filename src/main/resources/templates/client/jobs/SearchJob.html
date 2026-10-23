@@ -178,8 +178,30 @@
         <div class="grid grid-cols-12 gap-6">
             <div class="col-span-12 lg:col-span-5 space-y-4 h-[calc(100vh-140px)] overflow-y-auto pr-1">
 
-                <div th:if="${jobs == null or #lists.isEmpty(jobs)}" class="p-4 text-red-500">
-                    Không có dữ liệu jobs
+                <div th:if="${jobs == null or #lists.isEmpty(jobs)}"
+                     class="flex flex-col items-center justify-center px-6 py-16 bg-white rounded-2xl border border-gray-200 text-center">
+
+                    <div class="flex items-center justify-center w-16 h-16 mb-5 rounded-full bg-gray-100">
+                        <i class="ph ph-magnifying-glass text-3xl text-gray-400"></i>
+                    </div>
+
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        Không tìm thấy công việc phù hợp
+                    </h3>
+
+                    <p class="text-sm text-gray-500 max-w-md leading-6 mb-6">
+                        Rất tiếc, không có công việc nào phù hợp với tiêu chí tìm kiếm của bạn.
+                        Hãy thử thay đổi từ khóa hoặc điều chỉnh bộ lọc để tìm thêm cơ hội nhé!
+                    </p>
+
+                    <a th:href="@{/}"
+                       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+              bg-blue-600 text-white text-sm font-medium
+              hover:bg-blue-700 transition-colors">
+                        <i class="ph ph-arrow-counter-clockwise text-base"></i>
+                        Xem tất cả việc làm
+                    </a>
+
                 </div>
 
                 <div th:each="job, stat : ${jobs}">
@@ -190,7 +212,7 @@
                             document.getElementById('job-' + ${job.job_id}).classList.remove('hidden');
                             this.classList.add('active');
                          |"
-                         th:class="${stat.index == 0 ? 'job-card active p-5 rounded-xl cursor-pointer transition-all relative border-2 border-red-500 bg-orange-50/20 hover:shadow-md' : 'job-card p-5 rounded-xl cursor-pointer transition-all relative border-2 border-gray-200 bg-white hover:border-red-300 hover:shadow-md'}">
+                         th:class="${(activeJobId != null and job.job_id == activeJobId) or (activeJobId == null and stat.index == 0) ? 'job-card active p-5 rounded-xl cursor-pointer transition-all relative border-2 border-red-500 bg-orange-50/20 hover:shadow-md' : 'job-card p-5 rounded-xl cursor-pointer transition-all relative border-2 border-gray-200 bg-white hover:border-red-300 hover:shadow-md'}">
 
                         <!-- Debug: Hiển thị job_id -->
                         <span class="text-[10px] text-gray-400 hidden">ID: [[${job.job_id}]]</span>
@@ -247,13 +269,36 @@
 
             <div class="col-span-12 lg:col-span-7 bg-white rounded-lg border p-6 shadow-sm overflow-y-auto sticky h-[calc(100vh-140px)] top-24">
 
-                <div th:if="${jobs == null or #lists.isEmpty(jobs)}" class="p-4 text-red-500">
-                    Không có dữ liệu jobs để hiển thị chi tiết
+
+                <div th:if="${jobs == null or #lists.isEmpty(jobs)}"
+                     class="flex flex-col items-center justify-center h-full min-h-[500px]
+            bg-white rounded-2xl border border-gray-200 px-8 py-12 text-center">
+
+                    <div class="flex items-center justify-center w-20 h-20
+                rounded-full bg-blue-50 mb-6">
+                        <i class="ph ph-briefcase text-4xl text-blue-500"></i>
+                    </div>
+
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        Chưa có công việc để hiển thị
+                    </h3>
+
+                    <p class="text-sm text-gray-500 max-w-sm leading-6">
+                        Hiện tại không có công việc nào phù hợp với tiêu chí tìm kiếm của bạn.
+                        Hãy thử thay đổi từ khóa hoặc bộ lọc để khám phá thêm cơ hội việc làm nhé!
+                    </p>
+
+                    <div class="flex items-center gap-2 mt-6 text-sm text-gray-400">
+                        <i class="ph ph-info text-lg"></i>
+                        <span>Thông tin chi tiết công việc sẽ hiển thị tại đây</span>
+                    </div>
+
                 </div>
+
 
                 <div th:each="job, stat : ${jobs}"
                      th:id="'job-' + ${job.job_id}"
-                     th:class="${stat.index == 0 ? 'job-detail-panel space-y-6' : 'job-detail-panel hidden space-y-6'}">
+                     th:class="${(activeJobId != null and job.job_id == activeJobId) or (activeJobId == null and stat.index == 0) ? 'job-detail-panel space-y-6' : 'job-detail-panel hidden space-y-6'}">
                     <!-- Debug: Hiển thị job_id -->
                     <div class="text-[10px] text-gray-400 hidden">Panel ID: [[${job.job_id}]]</div>
 
@@ -267,11 +312,19 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <a th:href="@{/apply-job/{job_id}(job_id=${job.job_id})}" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-md transition-colors text-center">
-                            Ứng tuyển
-                        </a>
+                        <th:block th:if="${appliedStatus != null && appliedStatus.containsKey(job.job_id)}">
+                            <div class="flex-1 bg-green-100 text-green-800 border border-green-300 font-medium py-2.5 px-4 rounded-md flex items-center justify-start gap-2">
+                                <i class="ph ph-check-circle text-xl text-green-600"></i>
+                                <span>Đã ứng tuyển <span th:text="${#temporals.format(appliedStatus[job.job_id], 'dd/MM/yyyy')}">15/10/2026</span></span>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${appliedStatus == null || !appliedStatus.containsKey(job.job_id)}">
+                            <a th:href="@{/apply-job/{job_id}(job_id=${job.job_id})}" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-md transition-colors text-center">
+                                Ứng tuyển
+                            </a>
+                        </th:block>
                         <button class="border border-red-500 text-red-500 hover:bg-red-50 p-2.5 rounded-md">
-                            ❤️
+                            <i class="ph ph-heart text-lg"></i>
                         </button>
                     </div>
                     <hr>

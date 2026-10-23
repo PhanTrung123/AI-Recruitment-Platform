@@ -1,69 +1,111 @@
 <aside th:fragment="sidebar" class="w-[290px] shrink-0 rounded-xl bg-white border border-gray-200 shadow-sm p-4">
-    <div class="mb-3 rounded-xl bg-gray-50 px-4 py-3">
-        <div class="flex items-center gap-2 text-gray-500">
-            <i class="ph ph-hand-waving text-[20px]"></i>
-            <span class="text-[14px] font-medium">Xin chào</span>
+    <th:block th:if="${session.account != null and session.account.role.name() == 'USER'}">
+        <div class="mb-3 rounded-xl bg-gray-50 px-4 py-3">
+            <div class="flex items-center gap-2 text-gray-500">
+                <i class="ph ph-hand-waving text-[20px]"></i>
+                <span class="text-[14px] font-medium">Xin chào</span>
+            </div>
+            <p class="mt-1 truncate text-[18px] font-bold leading-6 text-gray-900"
+               th:text="${session.account.userName != null ? session.account.userName : 'Khách'}"></p>
         </div>
-        <p class="mt-1 truncate text-[18px] font-bold leading-6 text-gray-900"
-           th:text="${session.account != null and session.account.userName != null ? session.account.userName : 'Khách'}"></p>
-    </div>
 
-    <div class="space-y-3 mb-5">
-        <button type="button"
-                class="w-full rounded-xl border border-[#d7e9ff] bg-[#eef6ff] text-[#1f2d8f] font-medium py-2.5 text-sm">
-            Cho phép tìm kiếm CV
-        </button>
-        <button type="button"
-                class="w-full rounded-xl border border-[#dfe2e8] bg-white text-gray-700 font-medium py-2.5 text-sm">
-            Nhà tuyển dụng xem CV
-        </button>
-    </div>
+        <div class="space-y-3 mb-5">
+            <button type="button"
+                    class="w-full rounded-xl border border-[#d7e9ff] bg-[#eef6ff] text-[#1f2d8f] font-medium py-2.5 text-sm">
+                Cho phép tìm kiếm CV
+            </button>
+            <button type="button"
+                    class="w-full rounded-xl border border-[#dfe2e8] bg-white text-gray-700 font-medium py-2.5 text-sm">
+                Nhà tuyển dụng xem CV
+            </button>
+        </div>
+    </th:block>
+
+    <th:block th:if="${session.account != null and session.account.role.name() == 'RECRUITER'}">
+        <div class="flex items-center gap-3 mb-5">
+            <!-- Avatar mặc định -->
+            <div class="h-[80px] w-[80px] rounded-full flex items-center justify-center shadow-sm overflow-hidden shrink-0">
+                <img th:src="${session.account.avatar != null and !session.account.avatar.isEmpty()
+                          ? session.account.avatar
+                          : '/images/default-user.png'}"
+                     alt="User Avatar"
+                     class="w-full h-full rounded-full object-cover"/>
+            </div>
+
+            <!-- Thông tin nhà tuyển dụng -->
+            <div class="flex flex-col gap-1">
+                <h3 class="text-[17px] font-bold text-gray-900 leading-tight"
+                    th:text="${session.account.userName != null ? session.account.userName : 'Khách'}">Tuan123</h3>
+                <p class="text-[15px] text-gray-600 mt-0.5 leading-tight"
+                   th:text="${session.account.email != null ? session.account.email : 'Chưa cập nhật email'}">
+                </p>
+                <span class="inline-flex items-center justify-center bg-gray-100 text-gray-600 text-[12px] px-2 py-0.5 rounded-md font-medium w-fit mt-1.5">
+                Tài khoản nhà tuyển dụng
+            </span>
+            </div>
+        </div>
+    </th:block>
 
     <nav class="space-y-1">
-        <a th:href="@{/dashboard}"
+        <!-- 1. Tổng quan -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard} : @{/employer/dashboard}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
            th:classappend="${activeItem == 'overview'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
             <i class="ph ph-squares-four text-[22px]"></i>
-            <span>Tổng quan</span>
+            <span th:text="${session.account.role.name() == 'USER'} ? 'Tổng quan' : 'Bảng điều khiển'">Tổng quan</span>
         </a>
-        <a th:href="@{/dashboard/attachment}"
+
+        <!-- 2. Hồ sơ đính kèm / Quản lý CV ứng viên -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/attachment} : @{/employer/dashboard/applicants}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
-           th:classappend="${activeItem == 'attachment'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
-            <i class="ph ph-file-text text-[22px]"></i>
-            <span>Hồ sơ đính kèm</span>
+           th:classappend="${(session.account.role.name() == 'USER' and activeItem == 'attachment') or (session.account.role.name() == 'RECRUITER' and activeItem == 'applicants')} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
+            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-file-text text-[22px]' : 'ph ph-users text-[22px]'"></i>
+            <span th:text="${session.account.role.name() == 'USER'} ? 'Hồ sơ đính kèm' : 'Hồ sơ ứng tuyển'">Hồ sơ đính kèm</span>
         </a>
-        <a th:href="@{/dashboard/profile}"
+
+        <!-- 3. Hồ sơ cá nhân / Hồ sơ công ty -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/profile} : @{/employer/dashboard/company-profile}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
-           th:classappend="${activeItem == 'profile'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
-            <i class="ph ph-user-circle text-[22px]"></i>
-            <span>Hồ sơ ITviec</span>
+           th:classappend="${(session.account.role.name() == 'USER' and activeItem == 'profile') or (session.account.role.name() == 'RECRUITER' and activeItem == 'company-profile')} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
+            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-user-circle text-[22px]' : 'ph ph-buildings text-[22px]'"></i>
+            <span th:text="${session.account.role.name() == 'USER'} ? 'Hồ sơ của tôi' : 'Thông tin công ty'">Hồ sơ của tôi</span>
         </a>
-        <a th:href="@{/dashboard/my-jobs}"
+
+        <!-- 4. Việc làm của tôi / Tin tuyển dụng -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/my-jobs} : @{/employer/dashboard/job-openings}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
-           th:classappend="${activeItem == 'my-jobs'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
-            <i class="ph ph-briefcase text-[22px]"></i>
-            <span>Việc làm của tôi</span>
+           th:classappend="${(session.account.role.name() == 'USER' and activeItem == 'my-jobs') or (session.account.role.name() == 'RECRUITER' and activeItem == 'job-openings')} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
+            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-briefcase text-[22px]' : 'ph ph-megaphone text-[22px]'"></i>
+            <span th:text="${session.account.role.name() == 'USER'} ? 'Việc làm của tôi' : 'Tin tuyển dụng'">Việc làm của tôi</span>
         </a>
-        <a th:href="@{/dashboard/job-invitations}"
+
+        <!-- 5. Lời mời công việc / Lời mời ứng tuyển -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/job-invitations} : @{/employer/dashboard/invitations}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
-           th:classappend="${activeItem == 'job-invitations'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
+           th:classappend="${(session.account.role.name() == 'USER' and activeItem == 'job-invitations') or (session.account.role.name() == 'RECRUITER' and activeItem == 'invitations')} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
             <i class="ph ph-handshake text-[22px]"></i>
-            <span>Lời mời công việc</span>
+            <span th:text="${session.account.role.name() == 'USER'} ? 'Lời mời công việc' : 'Lời mời đã gửi'">Lời mời công việc</span>
             <span class="ml-auto rounded-full bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5">0</span>
         </a>
-        <a th:href="@{/dashboard/email-subscriptions}"
+
+        <!-- 6. Đăng ký nhận email / Gói dịch vụ -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/email-subscriptions} : @{/employer/dashboard/subscriptions}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
-           th:classappend="${activeItem == 'email-subscriptions'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
-            <i class="ph ph-envelope text-[22px]"></i>
-            <span>Đăng ký nhận email</span>
+           th:classappend="${(session.account.role.name() == 'USER' and activeItem == 'email-subscriptions') or (session.account.role.name() == 'RECRUITER' and activeItem == 'subscriptions')} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
+            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-envelope text-[22px]' : 'ph ph-credit-card text-[22px]'"></i>
+            <span th:text="${session.account.role.name() == 'USER'} ? 'Đăng ký nhận email' : 'Gói tuyển dụng'">Đăng ký nhận email</span>
         </a>
-        <a th:href="@{/dashboard/notifications}"
+
+        <!-- 7. Thông báo -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/notifications} : @{/employer/dashboard/notifications}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
            th:classappend="${activeItem == 'notifications'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
             <i class="ph ph-bell text-[22px]"></i>
             <span>Thông báo</span>
         </a>
-        <a th:href="@{/dashboard/settings}"
+
+        <!-- 8. Cài đặt -->
+        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/settings} : @{/employer/dashboard/settings}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
            th:classappend="${activeItem == 'settings'} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
             <i class="ph ph-gear text-[22px]"></i>

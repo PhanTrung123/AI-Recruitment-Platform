@@ -72,5 +72,7 @@ public class JobDTO {
     @NotNull(message = "ID công ty không được để trống")
     private Long company_id;
 
+    private Long applicationCount = 0L;
+
     private Boolean isEdit = false;
 }

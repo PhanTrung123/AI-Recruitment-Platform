@@ -44,4 +44,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<CV> cvs;
+
+    @OneToMany(mappedBy = "user")
+    private List<Company> companies;
 }

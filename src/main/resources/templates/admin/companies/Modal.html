@@ -5,6 +5,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userIdSelect = document.getElementById('userId');
+            const userEmailInput = document.getElementById('userEmail');
+
+            if (userIdSelect && userEmailInput) {
+                userIdSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const text = selectedOption.text;
+                    const emailMatch = text.match(/\(([^)]+)\)/);
+                    if (emailMatch && emailMatch[1]) {
+                        userEmailInput.value = emailMatch[1];
+                    } else {
+                        userEmailInput.value = '';
+                    }
+                });
+            }
+        });
+    </script>
 </head>
 <body>
 <div layout:fragment="content" class="min-h-[calc(100vh-80px)] flex flex-col justify-center items-center py-6">
@@ -39,6 +58,36 @@
                            th:errors="*{name}"
                            class="text-red-500 text-xs mt-1">
                         </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Người thành lập công ty <span class="text-red-500">*</span>
+                        </label>
+                        <select id="userId" th:field="*{userId}"
+                                class="w-full bg-white text-sm text-slate-800 border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                        >
+                            <option value="">Chọn người thành lập...</option>
+                            <option th:each="recruiter : ${recruiters}"
+                                    th:value="${recruiter.id}"
+                                    th:text="${recruiter.userName + ' (' + recruiter.email + ')'}">
+                            </option>
+                        </select>
+                        <p th:if="${#fields.hasErrors('userId')}"
+                           th:errors="*{userId}"
+                           class="text-red-500 text-xs mt-1">
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+                            Email người thành lập
+                        </label>
+                        <input type="text" id="userEmail" th:field="*{userEmail}"
+                               placeholder="Email sẽ hiển thị sau khi chọn người thành lập"
+                               readonly
+                               class="w-full bg-slate-50 text-sm text-slate-600 border border-slate-200 rounded-lg px-4 py-2.5 cursor-not-allowed"
+                        />
                     </div>
 
                     <div>

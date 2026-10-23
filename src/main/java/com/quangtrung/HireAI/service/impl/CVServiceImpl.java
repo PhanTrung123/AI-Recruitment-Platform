@@ -36,7 +36,7 @@ public class CVServiceImpl implements CVService {
         try {
             Map<String, Object> uploadParams = ObjectUtils.asMap(
                     "resource_type", "auto",
-                    "folder", "cvs", "access_mode", "public" // <-- Thêm dòng này để cấp quyền public"access_mode", "public" // <-- Thêm dòng này để cấp quyền public
+                    "folder", "cvs", "access_mode", "public" // <--  cấp quyền public "access_mode", "public"
             );
 
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(), uploadParams);
@@ -62,6 +62,16 @@ public class CVServiceImpl implements CVService {
     @Override
     public List<CV> getCVsByUser(User user) {
         return cvRepository.findByUser(user);
+    }
+
+    @Override
+    public Optional<CV> findById(Long id) {
+        return cvRepository.findById(id);
+    }
+
+    @Override
+    public CV save(CV cv) {
+        return cvRepository.save(cv);
     }
 
     @Override

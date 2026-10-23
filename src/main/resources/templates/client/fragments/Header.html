@@ -71,7 +71,8 @@
 
                                 <a href="#" onmouseenter="showCategoryTab('city', this)"
                                    class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
-                                    Jobs by City <i class="ph ph-caret-right text-lg"></i>
+                                    Jobs by City
+                                    <i class="ph ph-caret-right text-lg"></i>
                                 </a>
                             </div>
 
@@ -132,10 +133,11 @@
                                 <div id="tab-content-city"
                                      class="category-content hidden grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4">
                                     <a th:each="city : ${T(com.quangtrung.HireAI.enums.City).values()}"
-                                       th:href="@{/jobs/city/{name}(name=${city.name()})}"
+                                       th:href="@{/search/city/{city_id}(city_id=${city.ordinal()})}"
                                        th:text="${city.displayName}"
-                                       class="flex items-center text-sm font-medium text-gray-700 hover:text-red-600 transition-colors truncate">
+                                       class="text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
                                     </a>
+
                                 </div>
 
                             </div>
@@ -403,8 +405,8 @@
                     <h3 class="text-sm font-bold text-white">Exclusive Jobs</h3>
                 </div>
 
-                <div
-                        class="flex flex-col px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700 transition-colors min-w-[130px]"
+                <a th:href="@{/employer/signup}"
+                   class="flex flex-col px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700 transition-colors min-w-[130px]"
                 >
                     <div
                             class="flex items-center justify-between text-gray-400 text-xs mb-0.5"
@@ -413,7 +415,7 @@
                         <i class="ph ph-arrow-up-right"></i>
                     </div>
                     <h3 class="text-sm font-bold text-white">For Employers</h3>
-                </div>
+                </a>
             </div>
 
             <div class="hidden lg:block w-[1px] h-8 bg-gray-700 mx-2"></div>
@@ -477,88 +479,91 @@
 
                             </div>
                         </div>
-                        <a th:href="@{/dashboard}"
+                        <!-- 1. Dashboard -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard} : @{/employer/dashboard}"
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
-
                             <i class="ph ph-squares-four text-[24px]"></i>
-
-                            <span class="text-[16px]">
-                    Dashboard
-                </span>
-                        </a>
-                        <a th:href="@{/cv-attachment}"
-                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
-
-                            <i class="ph ph-file-text text-[24px]"></i>
-
-                            <span class="text-[16px]">
-                    CV Attachment
-                </span>
+                            <span class="text-[16px]"
+                                  th:text="${session.account.role.name() == 'USER'} ? 'Dashboard' : 'Employer Dashboard'">
+        Dashboard
+    </span>
                         </a>
 
-                        <a th:href="@{/dashboard/profile}"
+                        <!-- 2. CV Attachment / Candidate Applications -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/attachment} : @{/employer/dashboard/applicants}"
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
-
-                            <i class="ph ph-user text-[24px]"></i>
-
-                            <span class="text-[16px]">
-                    ITViec Profile
-                </span>
+                            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-file-text text-[24px]' : 'ph ph-users text-[24px]'"></i>
+                            <span class="text-[16px]"
+                                  th:text="${session.account.role.name() == 'USER'} ? 'CV Attachment' : 'Applicants'">
+        CV Attachment
+    </span>
                         </a>
-                        <a th:href="@{/my-jobs}"
+
+                        <!-- 3. Profile / Company Profile -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/profile} : @{/employer/dashboard/company-profile}"
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
-
-                            <i class="ph ph-briefcase text-[24px]"></i>
-
-                            <span class="text-[16px]">
-                    My Jobs
-                </span>
+                            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-user text-[24px]' : 'ph ph-buildings text-[24px]'"></i>
+                            <span class="text-[16px]"
+                                  th:text="${session.account.role.name() == 'USER'} ? 'ITViec Profile' : 'Company Profile'">
+        ITViec Profile
+    </span>
                         </a>
-                        <a th:href="@{/job-invitation}"
+
+                        <!-- 4. My Jobs / Job Openings -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/my-jobs} : @{/employer/dashboard/job-openings}"
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
-
-                            <i class="ph ph-briefcase text-[24px]"></i>
-
-                            <span class="text-[16px]">
-                    Job Invitation
-                </span>
+                            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-briefcase text-[24px]' : 'ph ph-megaphone text-[24px]'"></i>
+                            <span class="text-[16px]"
+                                  th:text="${session.account.role.name() == 'USER'} ? 'My Jobs' : 'Job Openings'">
+        My Jobs
+    </span>
                         </a>
-                        <a th:href="@{/email-subscriptions}"
+
+                        <!-- 5. Job Invitation / Sent Invitations -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/job-invitations} : @{/employer/dashboard/invitations}"
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
-
-                            <i class="ph ph-envelope text-[24px]"></i>
-
-                            <span class="text-[16px]">
-                    Email Subscriptions
-                </span>
+                            <i class="ph ph-handshake text-[24px]"></i>
+                            <span class="text-[16px]"
+                                  th:text="${session.account.role.name() == 'USER'} ? 'Job Invitations' : 'Sent Invitations'">
+        Job Invitations
+    </span>
                         </a>
-                        <a th:href="@{/notifications}"
-                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
 
+                        <!-- 6. Email Subscriptions / Service Packages -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/email-subscriptions} : @{/employer/dashboard/subscriptions}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
+                            <i th:class="${session.account.role.name() == 'USER'} ? 'ph ph-envelope text-[24px]' : 'ph ph-credit-card text-[24px]'"></i>
+                            <span class="text-[16px]"
+                                  th:text="${session.account.role.name() == 'USER'} ? 'Email Subscriptions' : 'Subscriptions'">
+                                Email Subscriptions
+                            </span>
+                        </a>
+
+                        <!-- 7. Notifications -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/notifications} : @{/employer/dashboard/notifications}"
+                           class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
                             <i class="ph ph-bell text-[24px]"></i>
-
                             <span class="text-[16px]">
-                    Notifications
-                </span>
+                                Notifications
+                            </span>
                         </a>
-                        <a th:href="@{/settings}"
+
+                        <!-- 8. Settings -->
+                        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/settings} : @{/employer/dashboard/settings}"
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
-
                             <i class="ph ph-gear text-[24px]"></i>
-
                             <span class="text-[16px]">
-                    Settings
-                </span>
+                                Settings
+                            </span>
                         </a>
 
+                        <!-- 9. Sign Out -->
                         <a th:href="@{/logout}"
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors border-t border-gray-100">
-
                             <i class="ph ph-sign-out text-[24px]"></i>
-
                             <span class="text-[16px]">
-                    Sign Out
-                </span>
+                                Sign Out
+                            </span>
                         </a>
 
                     </div>

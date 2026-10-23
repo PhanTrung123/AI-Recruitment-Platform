@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout/ClientLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <style>
+        .choices__inner {
+            border-radius: 0.75rem !important;
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            padding: 0.35rem 0.75rem !important;
+        }
+
+        .choices[data-type*="select-multiple"] .choices__button {
+            border-left: 1px solid rgba(255, 255, 255, .5);
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="bg-[#f3f5f7] min-h-screen py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-start gap-6">
+            <div th:replace="client/dashboard/fragments/Sidebar :: sidebar"></div>
+            <main class="flex-1 flex flex-col gap-5 min-w-0">
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Tin tuyển dụng</h1>
+                    </div>
+                    <a th:if="${newJob.isEdit}" th:href="@{/employer/dashboard/job-openings(create=true)}"
+                       class="bg-gradient-to-r from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white font-medium px-4 py-2.5 rounded-xl shadow-lg shadow-slate-900/10 hover:shadow-slate-900/20 flex items-center justify-center gap-2 transition active:scale-95 text-sm shrink-0">
+                        <i class="ph ph-plus text-[16px]"></i>
+                        <span>Tạo tin tuyển dụng mới</span>
+                    </a>
+                    <button th:unless="${newJob.isEdit}" type="button"
+                            onclick="document.getElementById('addJobModal').classList.remove('hidden'); document.getElementById('addJobModal').classList.add('flex');"
+                            class="bg-gradient-to-r from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white font-medium px-4 py-2.5 rounded-xl shadow-lg shadow-slate-900/10 hover:shadow-slate-900/20 flex items-center justify-center gap-2 transition active:scale-95 text-sm shrink-0">
+                        <i class="ph ph-plus text-[16px]"></i>
+                        <span>Tạo tin tuyển dụng mới</span>
+                    </button>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                            <tr class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200/80 whitespace-nowrap">
+                                <th class="p-3.5 pl-4 w-12 text-center font-semibold">STT</th>
+                                <th class="p-3.5 font-semibold">Tên công việc</th>
+                                <th class="p-3.5 font-semibold">Địa điểm</th>
+                                <th class="p-3.5 font-semibold">Hình thức</th>
+                                <th class="p-3.5 font-semibold">Mức lương</th>
+                                <th class="p-3.5 font-semibold">Hạn nộp</th>
+                                <th class="p-3.5 font-semibold text-center">Ứng tuyển</th>
+                                <th class="p-3.5 pr-4 font-semibold text-center w-24">Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                            <tr th:each="job, iterStat : ${jobs}" class="hover:bg-slate-50/80 transition duration-150">
+
+                                <!-- 1. STT -->
+                                <td class="p-3.5 pl-4 text-center font-medium text-slate-500"
+                                    th:text="${iterStat.count}">
+                                </td>
+
+                                <!-- 2. Tên Job (Giới hạn độ rộng, quá dài sẽ hiện ... và di chuột vào sẽ thấy full tên) -->
+                                <td class="p-3.5 font-semibold text-slate-900 max-w-[200px] sm:max-w-[240px]">
+                                    <div class="truncate" th:text="${job.jobName}" th:title="${job.jobName}"></div>
+                                </td>
+
+                                <!-- 3. Địa chỉ (Giới hạn độ rộng + dấu ...) -->
+                                <td class="p-3.5 text-slate-600 max-w-[160px] sm:max-w-[200px]">
+                                    <div class="truncate" th:text="${job.address}" th:title="${job.address}"></div>
+                                </td>
+
+                                <!-- 4. Hình thức làm việc (Hiển thị dạng Badge chuyên nghiệp) -->
+                                <td class="p-3.5 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200/60"
+                          th:text="${job.workType}">
+                    </span>
+                                </td>
+
+                                <!-- 5. Lương (Format số tiền đẹp mắt) -->
+                                <td class="p-3.5 font-semibold text-emerald-600 whitespace-nowrap"
+                                    th:text="${'$' + #numbers.formatDecimal(job.salary, 0, 'COMMA', 0, 'POINT')}">
+                                </td>
+
+                                <!-- 6. Ngày hết hạn -->
+                                <td class="p-3.5 text-slate-600 whitespace-nowrap">
+                                    <div class="flex items-center gap-1.5">
+                                        <i class="ph ph-calendar-blank text-slate-400 text-[14px]"></i>
+                                        <span th:text="${#temporals.format(job.expiredAt, 'dd/MM/yyyy')}"></span>
+                                    </div>
+                                </td>
+
+                                <!-- 7. Số đơn ứng tuyển  -->
+                                <td class="p-3.5 text-center whitespace-nowrap">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700">
+                                        <i class="ph ph-users text-[13px]"></i>
+                                        <span th:text="${job.applicationCount + ' đơn'}">0 đơn</span>
+                                    </span>
+                                </td>
+
+                                <!-- 8. Hành động -->
+                                <td class="p-3.5 pr-4 text-center whitespace-nowrap">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <a th:href="@{/employer/dashboard/job-opening/edit/{job_id}(job_id=${job.job_id})}"
+                                           title="Chỉnh sửa"
+                                           class="p-1.5 text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-100 transition">
+                                            <i class="ph ph-pencil-simple text-[15px]"></i>
+                                        </a>
+                                        <form th:action="@{/employer/dashboard/job-opening/delete/{id}(id=${job.job_id})}"
+                                              method="post"
+                                              class="inline"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa tin tuyển dụng này?');">
+                                            <button type="submit"
+                                                    title="Xóa"
+                                                    class="p-1.5 text-slate-600 hover:text-red-600 border border-slate-200 rounded-lg hover:bg-red-50 transition">
+                                                <i class="ph ph-trash text-[15px]"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Hiển thị khi danh sách trống (Đã sửa colspan="8" cho khớp với 8 cột) -->
+                            <tr th:if="${#lists.isEmpty(jobs)}">
+                                <td colspan="8" class="p-10 text-center text-slate-500">
+                                    <div class="flex flex-col items-center justify-center gap-2">
+                                        <i class="ph ph-briefcase text-4xl text-slate-300"></i>
+                                        <p class="text-sm font-medium text-slate-600">Bạn chưa có tin tuyển dụng
+                                            nào.</p>
+                                        <p class="text-xs text-slate-400">Hãy nhấn nút "Tạo tin tuyển dụng mới" để bắt
+                                            đầu đăng tin.</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+    <div th:replace="~{recruiter/dashboard/ModalAddJob :: modalAddJob}"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Cấu hình chung cho thư viện
+            const choicesOptions = {
+                removeItemButton: true,          // Hiện nút X để xóa tag
+                searchPlaceholderValue: 'Tìm kiếm...',
+                noResultsText: 'Không tìm thấy kết quả',
+                itemSelectText: 'Nhấn để chọn',  // Chữ hiện khi hover vào option
+                placeholder: true,
+                placeholderValue: 'Chọn mục...'
+            };
+
+            // Khởi tạo cho Lĩnh vực
+            const domainElement = document.getElementById('domainSelect');
+            if (domainElement) {
+                new Choices(domainElement, choicesOptions);
+            }
+
+            // Khởi tạo cho Kỹ năng
+            const skillElement = document.getElementById('skillSelect');
+            if (skillElement) {
+                new Choices(skillElement, choicesOptions);
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

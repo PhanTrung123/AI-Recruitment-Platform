@@ -20,6 +20,7 @@ public class SessionUserDTO implements Serializable {
     private String email;
     private String avatar;
     private Role role;
+    private String phone;
     private LocalDate dateOfBirth;
     private Gender gender;
     private String address;

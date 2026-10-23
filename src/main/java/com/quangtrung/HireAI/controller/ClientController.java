@@ -1,6 +1,7 @@
 package com.quangtrung.HireAI.controller;
 
 import com.quangtrung.HireAI.dto.*;
+import com.quangtrung.HireAI.enums.City;
 import com.quangtrung.HireAI.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class ClientController {
 
     @Autowired
     TitleService titleService;
+
+    @Autowired
+    JobService jobService;
 
     @ModelAttribute("domains")
     public List<DomainDTO> getDomains() {
@@ -74,6 +78,17 @@ public class ClientController {
         }).toList();
     }
 
+    @ModelAttribute("jobCount")
+    public long getJobCount() {
+        return jobService.count();
+    }
+
+    @ModelAttribute("cities")
+    public java.util.List<com.quangtrung.HireAI.enums.City> getCities() {
+        return java.util.Arrays.stream(City.values())
+                .sorted(java.util.Comparator.comparing(com.quangtrung.HireAI.enums.City::getDisplayName))
+                .toList();
+    }
 
     @RequestMapping("/")
     public String showHome(Model model) {

@@ -8,12 +8,12 @@
 <div th:fragment="hero">
     <section class="pt-10 pb-8 px-4 md:px-8 w-full">
         <div class="max-w-7xl mx-auto flex flex-col gap-6">
-            <h1
-                    class="text-[22px] text-white md:text-3xl lg:text-[32px] font-bold tracking-wide"
-            >
-                716 IT Jobs For Developers
-            </h1>
-
+            <div class="flex items-center text-[22px] text-white md:text-3xl lg:text-[32px] font-bold tracking-wide">
+                <h1>
+                    <span th:text="${jobCount}">0</span> IT Jobs Developers for
+                    <span th:text="${session != null and session.account != null ? session.account.userName : 'You'}">You</span>
+                </h1>
+            </div>
             <div th:replace="~{client/fragments/SearchBar :: searchBar}"></div>
 
             <div class="mt-1">

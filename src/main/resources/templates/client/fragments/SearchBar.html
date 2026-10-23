@@ -21,11 +21,7 @@
                     class="w-full rounded-[4px] appearance-none bg-white px-4 pl-11 pr-10 py-3.5 md:py-4 text-md text-gray-900 font-[500] border border-gray-300 outline-none cursor-pointer focus:border-blue-400"
             >
                 <option value="">All Cities</option>
-                <option value="HA_NOI">Ha Noi</option>
-                <option value="HO_CHI_MINH">Ho Chi Minh</option>
-                <option value="DA_NANG">Da Nang</option>
-                <option value="AN_GIANG">An Giang</option>
-                <option value="BAC_NINH">Bac Ninh</option>
+                <option th:each="city : ${cities}" th:value="${city.name()}" th:text="${city.displayName}"></option>
             </select>
 
             <i

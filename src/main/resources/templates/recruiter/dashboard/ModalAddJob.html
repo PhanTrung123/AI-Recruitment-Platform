@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="modalAddJob">
+    <!-- ================= MODAL ADD JOB ================= -->
+    <div id="addJobModal"
+         class="fixed inset-0 bg-slate-900/50 items-center justify-center z-[100] backdrop-blur-sm transition-opacity"
+         th:classappend="${showModal != null and showModal} ? 'flex' : 'hidden'">
+        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl relative overflow-hidden">
+
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white z-10">
+                <h2 th:text="${newJob.isEdit?'Chỉnh sửa thông tin tuyển dụng':'Tạo tin tuyển dụng mới'}"
+                    class="text-xl font-bold text-slate-800"></h2>
+                <a th:if="${newJob.isEdit}" th:href="@{/employer/dashboard/job-openings}"
+                   class="text-slate-400 hover:text-red-500 transition p-1">
+                    <i class="ph ph-x text-2xl"></i>
+                </a>
+                <button th:unless="${newJob.isEdit}" type="button"
+                        onclick="document.getElementById('addJobModal').classList.add('hidden'); document.getElementById('addJobModal').classList.remove('flex');"
+                        class="text-slate-400 hover:text-red-500 transition p-1">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Body Form -->
+            <div class="p-6 overflow-y-auto">
+                <form th:action="@{/employer/dashboard/job-openings/save}" method="POST" th:object="${newJob}"
+                      class="space-y-5">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Tên công việc & Lương -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tên công việc <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" th:field="*{jobName}" required placeholder="VD: Senior Java Developer"
+                                   class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-slate-800 outline-none transition">
+                            <input type="hidden" th:field="*{job_id}"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Mức lương dự kiến <span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" th:field="*{salary}" required min="0" placeholder="Nhập số tiền..."
+                                   class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition">
+                        </div>
+
+                        <!-- Thành phố & Địa chỉ -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Thành phố <span
+                                    class="text-red-500">*</span></label>
+                            <select th:field="*{city}" required
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition">
+                                <option value="" disabled>-- Chọn Tỉnh/Thành --</option>
+                                <option th:each="type : ${T(com.quangtrung.HireAI.enums.City).values()}"
+                                        th:value="${type.name()}"
+                                        th:text="${type.displayName}">
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Địa chỉ cụ thể <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" th:field="*{address}" required placeholder="Số 1, đường ABC..."
+                                   class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition">
+                        </div>
+
+                        <!-- WorkType & Level -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Hình thức làm việc <span
+                                    class="text-red-500">*</span></label>
+                            <select th:field="*{workType}" required
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition">
+                                <option value="" disabled>-- Chọn hình thức --</option>
+                                <option th:each="type : ${T(com.quangtrung.HireAI.enums.WorkType).values()}"
+                                        th:value="${type}" th:text="${type}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Cấp bậc <span
+                                    class="text-red-500">*</span></label>
+                            <select th:field="*{level}" required
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition">
+                                <option value="" disabled>-- Chọn cấp bậc --</option>
+                                <option th:each="type : ${T(com.quangtrung.HireAI.enums.Level).values()}"
+                                        th:value="${type}" th:text="${type}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Ngày hết hạn & Chuyên môn -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngày hết hạn <span
+                                    class="text-red-500">*</span></label>
+                            <input type="date" th:field="*{expiredAt}" required
+                                   class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Chuyên môn
+                                <span class="text-red-500">*</span></label>
+                            <select id="expertise" th:field="*{expertisies_id}" required
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition">
+                                <option value="" disabled>-- Chọn chuyên môn --</option>
+                                <option th:each="expertise : ${expertises}" th:value="${expertise.expertisies_id}"
+                                        th:text="${expertise.ExpertiseName}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Mô tả, Yêu cầu, Quyền lợi (Textarea dài) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Mô tả công việc <span
+                                class="text-red-500">*</span></label>
+                        <textarea th:field="*{description}" required rows="4" placeholder="Mô tả công việc chi tiết..."
+                                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Yêu cầu ứng viên <span
+                                    class="text-red-500">*</span></label>
+                            <textarea th:field="*{requirements}" required rows="4" placeholder="Kỹ năng, kinh nghiệm..."
+                                      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Quyền lợi <span
+                                    class="text-red-500">*</span></label>
+                            <textarea th:field="*{benefits}" required rows="4"
+                                      placeholder="Bảo hiểm, thưởng, team building..."
+                                      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition"></textarea>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Vị trí<span
+                                    class="text-red-500">*</span></label>
+                            <select id="title" th:field="*{title_id}" required
+                                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-800 outline-none transition rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all cursor-pointer">
+                                <option value="" disabled>-- Chọn vị trí --</option>
+                                <option th:each="title : ${titles}" th:value="${title.title_id}"
+                                        th:text="${title.titleName}"></option>
+                            </select>
+                        </div>
+                        <!-- Select Lĩnh vực -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Lĩnh vực (Domains) <span
+                                    class="text-red-500">*</span></label>
+                            <select id="domainSelect" th:field="*{domain_id}" multiple required class="w-full">
+                                <option th:each="domain : ${domains}" th:value="${domain.domain_id}"
+                                        th:text="${domain.domainName}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Select Kỹ năng -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Kỹ năng (Skills) <span
+                                    class="text-red-500">*</span></label>
+                            <select id="skillSelect" th:field="*{skill_id}" multiple required class="w-full">
+                                <option th:each="skill : ${skills}" th:value="${skill.skill_id}"
+                                        th:text="${skill.skillName}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="pt-5 border-t border-slate-100 flex justify-end gap-3 bg-white">
+                        <a th:if="${newJob.isEdit}" th:href="@{/employer/dashboard/job-openings}"
+                           class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                            Hủy bỏ
+                        </a>
+                        <!-- Nếu đang Add: Ẩn modal bằng JS -->
+                        <button th:unless="${newJob.isEdit}" type="button"
+                                onclick="document.getElementById('addJobModal').classList.add('hidden'); document.getElementById('addJobModal').classList.remove('flex');"
+                                class="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                            Hủy bỏ
+                        </button>
+                        <button th:text="${newJob.isEdit?'Chỉnh sửa':'Đăng công việc'}" type="submit"
+                                class="px-5 py-2.5 text-sm font-semibold text-white bg-slate-900 hover:bg-black rounded-xl shadow-lg transition">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

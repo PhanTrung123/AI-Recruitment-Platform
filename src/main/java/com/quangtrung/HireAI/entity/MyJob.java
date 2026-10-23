@@ -22,4 +22,7 @@ public class MyJob {
     @ManyToOne
     @JoinColumn(name = "cvs_id")
     private CV cv;
+
+    @Column(name = "cover_letter", columnDefinition = "TEXT", nullable = true)
+    private String coverLetter;
 }

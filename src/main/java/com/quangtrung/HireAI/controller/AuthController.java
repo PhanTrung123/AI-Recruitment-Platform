@@ -57,6 +57,7 @@ public class AuthController {
         sessionUser.setEmail(user.getEmail());
         sessionUser.setAvatar(user.getAvatar());
         sessionUser.setRole(user.getRole());
+        sessionUser.setPhone(user.getPhone());
         sessionUser.setDateOfBirth(user.getDateOfBirth());
         sessionUser.setGender(user.getGender());
         sessionUser.setAddress(user.getAddress());
@@ -65,8 +66,9 @@ public class AuthController {
         session.setAttribute("account", sessionUser);
         session.setAttribute("checkLogin", true);
 
-        if (Role.USER.equals(user.getRole())) {
-            return new ModelAndView("redirect:/", model);
+        if (Role.USER.equals(user.getRole())
+                || Role.RECRUITER.equals(user.getRole())) {
+            return new ModelAndView("redirect:/");
         }
         return new ModelAndView("redirect:/admin", model);
     }

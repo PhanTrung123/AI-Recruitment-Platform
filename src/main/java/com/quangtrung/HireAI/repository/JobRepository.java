@@ -39,4 +39,15 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("SELECT DISTINCT j FROM Job j LEFT JOIN FETCH j.company LEFT JOIN FETCH j.skillJobs sj LEFT JOIN FETCH sj.skill WHERE j.title.title_id = :titleId")
     List<Job> findByTitle(@Param("titleId") Long titleId);
 
+    @Query("SELECT DISTINCT j FROM Job j LEFT JOIN FETCH j.company LEFT JOIN FETCH j.skillJobs sj LEFT JOIN FETCH sj.skill WHERE j.city = :city")
+    List<Job> findByCity(@Param("city") com.quangtrung.HireAI.enums.City city);
+
+    long count();
+
+    @Query("SELECT j FROM Job j WHERE j.company.user.id = :userId")
+    List<Job> getJobsByUserId(@Param("userId") Long userId);
+
+    // Đếm số lượng bản ghi MyJob theo job_id của bảng Job
+    @Query("SELECT COUNT(mj) FROM MyJob mj WHERE mj.job.job_id = :jobId")
+    long countByJobId(@Param("jobId") Long jobId);
 }

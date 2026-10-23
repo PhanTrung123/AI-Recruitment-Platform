@@ -36,5 +36,19 @@ public class CompanyDTO {
     @Length(min = 2, max = 100, message = "Country must be between 2 and 100 characters")
     private String country;
 
+    private Long userId;
+
+    @NotEmpty(message = "Username cannot be empty")
+    private String userName;
+
+    @NotEmpty(message = "Email cannot be empty")
+    private String userEmail;
+
+    @NotEmpty(message = "Password cannot be empty")
+    private String password;
+
+    @NotEmpty(message = "Phone cannot be empty")
+    private String userPhone;
+
     private Boolean isEdit = false;
 }

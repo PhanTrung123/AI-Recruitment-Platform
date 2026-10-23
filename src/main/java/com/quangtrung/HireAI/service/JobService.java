@@ -1,6 +1,8 @@
 package com.quangtrung.HireAI.service;
 
+import com.quangtrung.HireAI.dto.JobDTO;
 import com.quangtrung.HireAI.entity.Job;
+import com.quangtrung.HireAI.enums.City;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -31,4 +33,12 @@ public interface JobService {
     List<Job> findByExpertise(Long expertisiesId);
 
     List<Job> findByTitle(Long titleId);
+
+    List<Job> findByCity(City city);
+
+    long count();
+
+    List<JobDTO> getJobsByUserId(Long userId);
+
+    void deleteJobCompletely(Long jobId);
 }
