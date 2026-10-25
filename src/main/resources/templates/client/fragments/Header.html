@@ -29,7 +29,7 @@
                 <li class="group/it-jobs relative flex flex-col items-stretch cursor-pointer hover:text-gray-300 transition-colors lg:flex-row lg:items-center lg:overflow-visible">
                     <a href="/jobs"
                        class="flex w-full items-center justify-between lg:w-auto lg:justify-start lg:gap-1 lg:py-3">
-                        IT Jobs <i class="ph ph-caret-down text-sm"></i>
+                        <span th:text="#{nav.it.jobs}">IT Jobs</span> <i class="ph ph-caret-down text-sm"></i>
                     </a>
 
                     <div id="it-jobs-dropdown"
@@ -46,32 +46,32 @@
                             <div class="flex flex-col border-r border-gray-200 lg:w-[280px] lg:shrink-0">
                                 <a href="#" onmouseenter="showCategoryTab('domain', this)"
                                    class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
-                                    Jobs by Domain <i class="ph ph-caret-right text-lg"></i>
+                                    <span th:text="#{nav.jobs.by.domain}">Jobs by Domain</span> <i class="ph ph-caret-right text-lg"></i>
                                 </a>
 
                                 <a href="#" onmouseenter="showCategoryTab('skill', this)"
                                    class="tab-item flex items-center justify-between bg-red-50 px-3 py-3 font-medium text-red-600 lg:px-5 lg:py-4">
-                                    Jobs by Skill <i class="ph ph-caret-right text-lg"></i>
+                                    <span th:text="#{nav.jobs.by.skill}">Jobs by Skill</span> <i class="ph ph-caret-right text-lg"></i>
                                 </a>
 
                                 <a href="#" onmouseenter="showCategoryTab('expertise', this)"
                                    class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
-                                    Jobs by Expertise <i class="ph ph-caret-right text-lg"></i>
+                                    <span th:text="#{nav.jobs.by.expertise}">Jobs by Expertise</span> <i class="ph ph-caret-right text-lg"></i>
                                 </a>
 
                                 <a href="#" onmouseenter="showCategoryTab('title', this)"
                                    class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
-                                    Jobs by Title <i class="ph ph-caret-right text-lg"></i>
+                                    <span th:text="#{nav.jobs.by.title}">Jobs by Title</span> <i class="ph ph-caret-right text-lg"></i>
                                 </a>
 
                                 <a href="#" onmouseenter="showCategoryTab('company', this)"
                                    class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
-                                    Jobs by Company <i class="ph ph-caret-right text-lg"></i>
+                                    <span th:text="#{nav.jobs.by.company}">Jobs by Company</span> <i class="ph ph-caret-right text-lg"></i>
                                 </a>
 
                                 <a href="#" onmouseenter="showCategoryTab('city', this)"
                                    class="tab-item flex items-center justify-between px-3 py-3 font-medium text-gray-700 hover:bg-gray-50 lg:px-5 lg:py-4">
-                                    Jobs by City
+                                    <span th:text="#{nav.jobs.by.city}">Jobs by City</span>
                                     <i class="ph ph-caret-right text-lg"></i>
                                 </a>
                             </div>
@@ -150,7 +150,7 @@
                     <a href="/companies"
                        class="flex w-full items-center justify-between lg:w-auto lg:justify-start lg:gap-1 lg:py-3 font-medium"
                     >
-                        IT Companies
+                        <span th:text="#{nav.it.companies}">IT Companies</span>
                         <i class="ph ph-caret-down text-sm"></i>
                     </a>
 
@@ -169,7 +169,7 @@
                         <!-- Cột trái: CÔNG TY IT TỐT NHẤT -->
                         <div class="flex-1 lg:border-r lg:border-gray-200 lg:pr-8">
                             <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
-                                Công ty IT Tốt Nhất
+                                <span th:text="#{nav.best.it.companies}">Công ty IT Tốt Nhất</span>
                             </h3>
 
                             <div class="flex flex-col lg:flex-row gap-6">
@@ -228,7 +228,7 @@
                         <!-- Cột phải: ĐÁNH GIÁ CÔNG TY -->
                         <div class="w-full lg:w-[280px] shrink-0">
                             <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
-                                Đánh giá công ty
+                                <span th:text="#{nav.company.reviews}">Đánh giá công ty</span>
                             </h3>
 
                             <a href="/danh-gia-cong-ty" class="block group/item">
@@ -253,7 +253,7 @@
                     <a href="/blog"
                        class="flex w-full items-center justify-between lg:w-auto lg:justify-start lg:gap-1 lg:py-3 font-medium"
                     >
-                        Blog
+                        <span th:text="#{nav.blog}">Blog</span>
                         <i class="ph ph-caret-down text-sm"></i>
                     </a>
 
@@ -270,7 +270,7 @@
                         <!-- Cột trái: BÁO CÁO LƯƠNG IT -->
                         <div class="flex-1 lg:border-r lg:border-gray-200 lg:pr-8">
                             <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
-                                Báo Cáo Lương IT
+                                <span th:text="#{nav.salary.report}">Báo Cáo Lương IT</span>
                             </h3>
 
                             <div class="flex flex-col lg:flex-row gap-6">
@@ -309,7 +309,7 @@
                         <!-- Cột phải: BLOG CATEGORIES -->
                         <div class="w-full lg:w-[280px] shrink-0">
                             <h3 class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-4">
-                                Blog
+                                <span th:text="#{nav.blog.categories}">Blog</span>
                             </h3>
 
                             <div class="flex flex-col gap-3">
@@ -346,7 +346,7 @@
                     <a href="/features"
                        class="flex w-full items-center justify-between gap-1.5 lg:w-auto lg:justify-start lg:py-3"
                     >
-                        <span>Features</span>
+                        <span th:text="#{nav.features}">Features</span>
                         <span class="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">HOT</span>
                         <i class="ph ph-caret-down text-sm"></i>
                     </a>
@@ -445,7 +445,7 @@
                 <i class="ph ph-user-circle text-[27px]"></i>
 
                 <span class="hidden sm:block text-sm md:text-base font-semibold">
-        Sign in
+        <span th:text="#{nav.sign.in}">Sign in</span>
     </span>
             </a>
             <div th:if="${session.account != null}"
@@ -484,8 +484,8 @@
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
                             <i class="ph ph-squares-four text-[24px]"></i>
                             <span class="text-[16px]"
-                                  th:text="${session.account.role.name() == 'USER'} ? 'Dashboard' : 'Employer Dashboard'">
-        Dashboard
+                                  th:text="${session.account.role.name() == 'USER'} ? #{nav.dashboard} : 'Employer Dashboard'">
+        <span th:text="#{nav.dashboard}">Dashboard</span>
     </span>
                         </a>
 
@@ -553,7 +553,7 @@
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors">
                             <i class="ph ph-gear text-[24px]"></i>
                             <span class="text-[16px]">
-                                Settings
+                                <span th:text="#{nav.settings}">Settings</span>
                             </span>
                         </a>
 
@@ -562,7 +562,7 @@
                            class="flex items-center gap-4 px-5 h-[56px] text-gray-800 hover:bg-gray-100 transition-colors border-t border-gray-100">
                             <i class="ph ph-sign-out text-[24px]"></i>
                             <span class="text-[16px]">
-                                Sign Out
+                                <span th:text="#{nav.sign.out}">Sign Out</span>
                             </span>
                         </a>
 
@@ -572,12 +572,17 @@
             <div
                     class="hidden sm:flex items-center text-sm font-bold ml-1 md:ml-4"
             >
-                <span class="cursor-pointer text-white">EN</span>
+                <a th:href="@{''(lang='en')}"
+                   th:class="${#locale.language == 'en' ? 'text-white' : 'text-gray-500 hover:text-white'}"
+                   class="cursor-pointer transition-colors">
+                    <span th:text="#{lang.en}">EN</span>
+                </a>
                 <div class="w-px h-4 bg-gray-500 mx-2 md:mx-3"></div>
-                <span
-                        class="cursor-pointer text-gray-500 hover:text-white transition-colors"
-                >VN</span
-                >
+                <a th:href="@{''(lang='vi')}"
+                   th:class="${#locale.language == 'vi' ? 'text-white' : 'text-gray-500 hover:text-white'}"
+                   class="cursor-pointer transition-colors">
+                    <span th:text="#{lang.vn}">VN</span>
+                </a>
             </div>
         </div>
     </header>

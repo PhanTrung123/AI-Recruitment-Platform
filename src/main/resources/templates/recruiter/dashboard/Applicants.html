@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout/ClientLayout}">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content" class="bg-[#f3f5f7] min-h-screen py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-start gap-6">
+
+            <!-- Sidebar -->
+            <div th:replace="client/dashboard/fragments/Sidebar :: sidebar"></div>
+
+            <!-- Main Content -->
+            <main class="flex-1 flex flex-col min-w-0">
+
+                <!-- Header trang -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Hồ sơ ứng tuyển</h1>
+                        <p class="text-xs text-slate-500 mt-1">Quản lý, đánh giá CV và phản hồi các ứng viên đã nộp đơn
+                            vào công ty.</p>
+                    </div>
+                </div>
+
+                <!-- Thanh công cụ: Tìm kiếm & Bộ lọc -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm mb-5 flex flex-wrap items-center justify-between gap-4">
+
+                    <!-- Ô tìm kiếm -->
+                    <form th:action="@{/employer/dashboard/applicants}" method="get"
+                          class="relative flex-1 min-w-[240px] max-w-sm">
+                        <!-- Giữ lại trạng thái lọc hiện tại khi tìm kiếm -->
+                        <input type="hidden" name="status" th:value="${currentStatus}">
+
+                        <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[16px]"></i>
+                        <input type="text" name="keyword" th:value="${currentKeyword}"
+                               placeholder="Tìm theo tên ứng viên..."
+                               class="w-full pl-10 pr-4 py-2 bg-slate-50/70 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-slate-400 focus:bg-white transition">
+                    </form>
+
+                    <!-- Cụm lọc trạng thái & Chọn tin tuyển dụng -->
+                    <div class="flex flex-wrap items-center gap-2">
+
+                        <!-- Tabs lọc trạng thái (Dạng Segmented Control) -->
+                        <div class="inline-flex p-1 rounded-xl bg-slate-100/80 border border-slate-200/60">
+                            <a th:href="@{/employer/dashboard/applicants(keyword=${currentKeyword}, status='')}"
+                               class="px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                               th:classappend="${currentStatus == null or currentStatus == ''} ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'">
+                                Tất cả
+                            </a>
+                            <a th:href="@{/employer/dashboard/applicants(keyword=${currentKeyword}, status='PENDING')}"
+                               class="px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                               th:classappend="${currentStatus == 'PENDING' or currentStatus == 'Chờ duyệt'} ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'">
+                                Chờ duyệt
+                            </a>
+                            <a th:href="@{/employer/dashboard/applicants(keyword=${currentKeyword}, status='ACCEPTED')}"
+                               class="px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                               th:classappend="${currentStatus == 'ACCEPTED' or currentStatus == 'Phù hợp'} ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'">
+                                Phù hợp
+                            </a>
+                            <a th:href="@{/employer/dashboard/applicants(keyword=${currentKeyword}, status='REJECTED')}"
+                               class="px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                               th:classappend="${currentStatus == 'REJECTED' or currentStatus == 'Đã từ chối'} ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'">
+                                Đã từ chối
+                            </a>
+                        </div>
+
+                        <div class="h-5 w-[1px] bg-slate-200 mx-1 hidden xl:block"></div>
+
+                        <!-- Dropdown lọc theo công việc -->
+                        <div class="relative">
+                            <select class="appearance-none pl-3.5 pr-9 py-2 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus:outline-none focus:border-slate-400 transition cursor-pointer max-w-[220px] truncate">
+                                <option value="">Tất cả tin tuyển dụng</option>
+                                <option th:each="job : ${jobs}"
+                                        th:value="${job.job_id}"
+                                        th:text="${job.jobName}">
+                                </option>
+                            </select>
+                            <i class="ph ph-caret-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        </div>
+
+                        <!-- Nút lọc nâng cao -->
+                        <button type="button"
+                                class="p-2 border border-slate-200 rounded-xl bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition"
+                                title="Bộ lọc nâng cao">
+                            <i class="ph ph-sliders-horizontal text-[16px] block"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bảng danh sách ứng viên (Đã tối ưu không bị cuộn ngang) -->
+                <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col">
+                    <div class="w-full">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                            <tr class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200/80 whitespace-nowrap">
+                                <th class="py-3.5 pl-4 pr-2 font-semibold">Ứng viên</th>
+                                <th class="py-3.5 px-2.5 font-semibold">Vị trí ứng tuyển</th>
+                                <th class="py-3.5 px-2.5 font-semibold">Ngày nộp</th>
+                                <th class="py-3.5 px-2.5 font-semibold text-center">Hồ sơ (CV)</th>
+                                <th class="py-3.5 px-2.5 font-semibold text-center">Trạng thái</th>
+                                <th class="py-3.5 pl-2 pr-4 font-semibold text-center">Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+
+                            <!-- Hàng dữ liệu mẫu -->
+                            <tr th:each="app : ${applications}" class="hover:bg-slate-50/80 transition duration-150">
+
+                                <!-- 1. Thông tin ứng viên -->
+                                <td class="py-3.5 pl-4 pr-2 whitespace-nowrap">
+                                    <div class="flex items-center gap-2.5">
+                                        <img th:src="${app.candidateAvatar != null and !app.candidateAvatar.isEmpty() ? app.candidateAvatar : '/images/default-user.png'}"
+                                             alt="Avatar"
+                                             class="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0">
+                                        <div class="max-w-[145px] xl:max-w-[170px]">
+                                            <div class="font-semibold text-slate-900 truncate"
+                                                 th:text="${app.candidateName}"
+                                                 th:title="${app.candidateName}">
+                                            </div>
+                                            <div class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5 truncate"
+                                                 th:title="${app.candidateEmail}">
+                                                <i class="ph ph-envelope-simple text-[12px] text-slate-400 shrink-0"></i>
+                                                <span class="truncate" th:text="${app.candidateEmail}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- 2. Vị trí ứng tuyển -->
+                                <td class="py-3.5 px-2.5 max-w-[150px] lg:max-w-[180px] xl:max-w-[210px]">
+                                    <a th:href="@{/jobs/detail/{id}(id=${app.job_id})}"
+                                       th:title="${app.jobName}"
+                                       th:text="${app.jobName}"
+                                       class="font-semibold text-slate-800 hover:text-blue-600 transition block truncate">
+                                        Senior Frontend Developer
+                                    </a>
+                                </td>
+
+                                <!-- 3. Ngày ứng tuyển -->
+                                <td class="py-3.5 px-2.5 text-slate-600 whitespace-nowrap">
+                                    <div class="flex items-center gap-1">
+                                        <i class="ph ph-calendar-blank text-slate-400 text-[14px]"></i>
+                                        <span th:text="${app.appliedAt != null ? #temporals.format(app.appliedAt, 'dd/MM/yyyy') : '---'}">22/10/2026</span>
+                                    </div>
+                                </td>
+
+                                <!-- 4. Nút Xem CV -->
+                                <td class="py-3.5 px-2.5 text-center whitespace-nowrap">
+                                    <a th:if="${app.cvFileUrl != null}"
+                                       th:href="${app.cvFileUrl}"
+                                       target="_blank"
+                                       class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-red-50 text-red-600 hover:bg-red-100/80 border border-red-100 transition"
+                                       title="Mở CV trong tab mới">
+                                        <i class="ph ph-file-pdf text-[14px]"></i>
+                                        <span>Xem CV</span>
+                                    </a>
+                                    <span th:unless="${app.cvFileUrl != null}" class="text-slate-400 text-[11px]">Không có CV</span>
+                                </td>
+
+                                <!-- 5. Trạng thái -->
+                                <td class="py-3.5 px-2.5 text-center whitespace-nowrap">
+
+                                    <!-- 1. Trạng thái: Chờ duyệt -->
+                                    <span th:if="${app.status == null or app.status == 'PENDING' or app.status == 'Chờ duyệt'}"
+                                          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200/60">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        Chờ duyệt
+                                    </span>
+
+                                    <!-- 2. Trạng thái: Phù hợp (THÊM ĐOẠN NÀY) -->
+                                    <span th:if="${app.status == 'ACCEPTED' or app.status == 'Phù hợp'}"
+                                          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Phù hợp
+                                    </span>
+
+                                    <!-- 3. Trạng thái: Đã từ chối (THÊM ĐOẠN NÀY) -->
+                                    <span th:if="${app.status == 'REJECTED' or app.status == 'Đã từ chối'}"
+                                          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-red-50 text-red-700 border border-red-200/60">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        Đã từ chối
+                                    </span>
+                                </td>
+                                <td class="py-3.5 pl-2 pr-4 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-1.5">
+                                        <form th:action="@{/employer/dashboard/applicants/update-status}" method="post"
+                                              class="inline">
+                                            <input type="hidden" name="myJobId" th:value="${app.myjob_id}"/>
+                                            <input type="hidden" name="status" value="ACCEPTED"/>
+                                            <button type="submit"
+                                                    title="Đánh dấu Phù hợp"
+                                                    class="p-1.5 border border-slate-200 rounded-lg text-slate-600 bg-white hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 transition">
+                                                <i class="ph ph-check text-[15px] block"></i>
+                                            </button>
+                                        </form>
+                                        <form th:action="@{/employer/dashboard/applicants/update-status}" method="post"
+                                              class="inline"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn từ chối ứng viên này không?');">
+                                            <input type="hidden" name="myJobId" th:value="${app.myjob_id}"/>
+                                            <input type="hidden" name="status" value="REJECTED"/>
+                                            <button type="submit"
+                                                    title="Từ chối ứng viên"
+                                                    class="p-1.5 border border-slate-200 rounded-lg text-slate-600 bg-white hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition">
+                                                <i class="ph ph-x text-[15px] block"></i>
+                                            </button>
+                                        </form>
+
+                                        <button type="button"
+                                                title="Nhắn tin cho ứng viên"
+                                                class="p-1.5 border border-slate-200 rounded-lg text-slate-600 bg-white hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition">
+                                            <i class="ph ph-chat-circle-dots text-[15px] block"></i>
+                                        </button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(applications)}">
+                                <td colspan="6" class="p-10 text-center text-slate-500">
+                                    <div class="flex flex-col items-center justify-center gap-2">
+                                        <i class="ph ph-users text-4xl text-slate-300"></i>
+                                        <p class="text-sm font-medium text-slate-600">Chưa có hồ sơ ứng tuyển nào.</p>
+                                        <p class="text-xs text-slate-400">Các ứng viên nộp CV vào tin tuyển dụng của bạn
+                                            sẽ xuất hiện tại đây.</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

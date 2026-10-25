@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.List;
+
 @Data
 public class CompanyDTO {
     private Long company_id;
@@ -15,6 +17,12 @@ public class CompanyDTO {
     @NotEmpty(message = "Logo cannot be empty")
     @Length(max = 500, message = "Logo must not exceed 500 characters")
     private String logo;
+
+    private String slogan;
+    private Integer foundedYear;
+    private String industry;
+    private String mapUrl;
+    private List<String> benefits;
 
     @NotEmpty(message = "Description cannot be empty")
     @Length(min = 20, max = 1000, message = "Description must be between 20 and 1000 characters")

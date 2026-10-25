@@ -134,7 +134,14 @@
             <div class="mt-8">
                 <h1 class="text-[22px] font-bold pb-5">
                     <span th:text="${#lists.size(jobs)}"></span>
-                    việc làm <span class="text-red-600" th:text="${filterName}"></span> tại Việt Nam</h1>
+                    <span th:text="#{search.all.jobs}">việc làm</span>
+                    <th:block th:if="${filterName == 'all'}">
+                        <span class="text-red-600" th:text="#{search.all.jobs}">tất cả công việc tại Việt Nam</span>
+                    </th:block>
+                    <th:block th:if="${filterName != 'all'}">
+                        <span class="text-red-600" th:text="${filterName}"></span>
+                    </th:block>
+                </h1>
 
                 <div class="py-2 flex items-center justify-between flex-wrap gap-4">
                     <div class="flex flex-wrap gap-2 text-[13px]">

@@ -13,15 +13,28 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long company_id;
+
     private String name;
+    @Column(columnDefinition = "LONGTEXT")
     private String logo;
+    private String slogan;
+
+    private Integer foundedYear;
+    private String industry;
+    private String size;
+    private String website;
+    private String address;
+    private String country;
+    private String mapUrl;
+
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
-    private String website;
-    private String size;
-    private String address;
-    private String country;
+
+    @ElementCollection
+    @CollectionTable(name = "company_benefits", joinColumns = @JoinColumn(name = "company_id"))
+    @Column(name = "benefit")
+    private List<String> benefits;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20) DEFAULT 'PENDING'")
@@ -33,4 +46,5 @@ public class Company {
 
     @OneToMany(mappedBy = "company")
     private List<Job> jobs;
+
 }

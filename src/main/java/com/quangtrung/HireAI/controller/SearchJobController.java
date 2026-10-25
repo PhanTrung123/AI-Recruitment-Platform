@@ -198,4 +198,41 @@ public class SearchJobController {
         model.addAttribute("appliedStatus", getAppliedJobStatus(jobs, session));
         return "client/jobs/SearchJob";
     }
+
+    @GetMapping("/search-job")
+    public String searchJob(@RequestParam(value = "keyword", required = false) String keyword,
+                            @RequestParam(value = "city", required = false) String city,
+                            Model model,
+                            HttpSession session) {
+        com.quangtrung.HireAI.enums.City cityEnum = null;
+        if (city != null && !city.isEmpty()) {
+            try {
+                cityEnum = com.quangtrung.HireAI.enums.City.valueOf(city);
+            } catch (IllegalArgumentException e) {
+                cityEnum = null;
+            }
+        }
+        List<Job> jobs = jobService.searchJobs(keyword, cityEnum);
+        String filterName = "";
+        String searchPrefix = "";
+        if (keyword != null && !keyword.isEmpty()) {
+            filterName = keyword;
+        }
+        if (cityEnum != null) {
+            if (!filterName.isEmpty()) {
+                filterName += " " + cityEnum.getDisplayName();
+            } else {
+                filterName = cityEnum.getDisplayName();
+            }
+        }
+        if (filterName.isEmpty()) {
+            filterName = "all";
+        }
+
+        model.addAttribute("jobs", jobs);
+        model.addAttribute("filterName", filterName);
+        model.addAttribute("searchPrefix", searchPrefix);
+        model.addAttribute("appliedStatus", getAppliedJobStatus(jobs, session));
+        return "client/jobs/SearchJob";
+    }
 }

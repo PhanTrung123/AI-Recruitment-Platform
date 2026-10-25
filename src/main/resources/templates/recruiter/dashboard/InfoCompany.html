@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout/ClientLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+<div layout:fragment="content" class="bg-[#f3f5f7] min-h-screen py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-start gap-6">
+            <div th:replace="client/dashboard/fragments/Sidebar :: sidebar"></div>
+            <main class="flex-1 flex flex-col gap-5 min-w-0">
+                <div class="flex items-center ">
+                    <h1 class="text-2xl font-bold text-slate-900">Thông tin công ty</h1>
+                </div>
+                <div th:if="${company != null}">
+                    <div class="w-full min-h-[12rem] rounded-2xl shadow-sm bg-gradient-to-r from-gray-900 via-gray-900 to-[#3b0909] p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4 min-w-0 flex-1">
+                            <div onclick="document.getElementById('logo-file-input').click()"
+                                 title="Bấm để tải lên Logo mới"
+                                 class="w-20 h-20 bg-white rounded-xl p-2 shadow-md flex items-center justify-center shrink-0 cursor-pointer relative group overflow-hidden">
+                                <input type="file" id="logo-file-input" accept="image/*" class="hidden"
+                                       onchange="uploadLogoFile(this)">
+                                <img id="company-logo-img"
+                                     th:if="${company.logo != null and !company.logo.isEmpty()}"
+                                     th:src="${company.logo}"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                                     alt="Logo" class="w-full h-full object-contain rounded-lg">
+
+                                <i id="company-logo-icon"
+                                   th:style="${company.logo != null and !company.logo.isEmpty() ? 'display:none;' : ''}"
+                                   class="ph-duotone ph-buildings text-4xl text-slate-400"></i>
+                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                                    <i class="ph ph-camera text-white text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                                    <span id="banner-company-name"
+                                          th:text="${company.name != null ? company.name : 'Tên công ty'}"
+                                          class="truncate"></span>
+                                    <i class="ph-fill ph-check-circle text-blue-400 text-xl shrink-0"></i>
+                                </h2>
+                                <p data-field="slogan"
+                                   data-empty-text="Chưa cập nhật slogan"
+                                   th:data-value="${company.slogan != null ? company.slogan : ''}"
+                                   th:text="${company.slogan != null and !company.slogan.isEmpty() ? company.slogan : 'Chưa cập nhật slogan'}"
+                                   class="editable-target text-slate-300 text-sm mt-1 truncate rounded transition inline-block max-w-full">
+                                </p>
+                            </div>
+                        </div>
+                        <div class="shrink-0 self-start sm:self-center">
+                            <button type="button"
+                                    onclick="enableInlineEdit(this)"
+                                    class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-medium backdrop-blur-sm border border-white/15 transition"
+                                    title="Chỉnh sửa Slogan">
+                                <i class="ph ph-pencil-simple text-[15px]"></i>
+                                <span>Chỉnh sửa</span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <div class="lg:col-span-5 space-y-6">
+                            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-slate-100 min-w-0 w-full">
+                                <h3 class="text-lg font-bold text-slate-800 mb-5">
+                                    Thông tin cơ bản
+                                </h3>
+
+                                <div class="space-y-3">
+
+                                    <!-- Tên công ty -->
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 text-slate-500">
+                                            <i class="ph ph-buildings text-lg"></i>
+                                            <span class="text-sm">Tên công ty</span>
+                                        </div>
+
+                                        <div class="edit-row flex items-center justify-between gap-3 pl-0 sm:pl-7 min-w-0">
+            <span data-field="name"
+                  data-empty-text="Chưa cập nhật tên công ty"
+                  th:data-value="${company.name != null ? company.name : ''}"
+                  th:text="${company.name != null and !company.name.isEmpty() ? company.name : 'Chưa cập nhật tên công ty'}"
+                  class="editable-target text-sm font-medium text-slate-800 min-w-0 break-words flex-1 rounded transition">
+            </span>
+                                            <button type="button"
+                                                    onclick="enableInlineEdit(this)"
+                                                    class="shrink-0 text-slate-400 hover:text-blue-600 transition-colors"
+                                                    aria-label="Chỉnh sửa tên công ty">
+                                                <i class="ph ph-pencil-simple text-lg border border-slate-200 rounded p-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quy mô -->
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 text-slate-500">
+                                            <i class="ph ph-users text-lg"></i>
+                                            <span class="text-sm">Quy mô</span>
+                                        </div>
+
+                                        <div class="edit-row flex items-center justify-between gap-3 pl-0 sm:pl-7 min-w-0">
+            <span data-field="size"
+                  data-suffix=" thành viên"
+                  data-empty-text="Chưa cập nhật quy mô"
+                  th:data-value="${company.size != null ? company.size : ''}"
+                  th:text="${company.size != null and !company.size.isEmpty() ? company.size + ' thành viên' : 'Chưa cập nhật quy mô'}"
+                  class="editable-target text-sm font-medium text-slate-800 min-w-0 break-words flex-1 rounded transition">
+            </span>
+                                            <button type="button"
+                                                    onclick="enableInlineEdit(this)"
+                                                    class="shrink-0 text-slate-400 hover:text-blue-600 transition-colors"
+                                                    aria-label="Chỉnh sửa quy mô">
+                                                <i class="ph ph-pencil-simple text-lg border border-slate-200 rounded p-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Năm thành lập -->
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 text-slate-500">
+                                            <i class="ph ph-calendar-blank text-lg"></i>
+                                            <span class="text-sm">Năm thành lập</span>
+                                        </div>
+
+                                        <div class="edit-row flex items-center justify-between gap-3 pl-0 sm:pl-7 min-w-0">
+            <span data-field="foundedYear"
+                  data-empty-text="Chưa cập nhật năm thành lập"
+                  th:data-value="${company.foundedYear != null ? company.foundedYear : ''}"
+                  th:text="${company.foundedYear != null ? company.foundedYear : 'Chưa cập nhật năm thành lập'}"
+                  class="editable-target text-sm font-medium text-slate-800 min-w-0 break-words flex-1 rounded transition">
+            </span>
+                                            <button type="button"
+                                                    onclick="enableInlineEdit(this)"
+                                                    class="shrink-0 text-slate-400 hover:text-blue-600 transition-colors"
+                                                    aria-label="Chỉnh sửa năm thành lập">
+                                                <i class="ph ph-pencil-simple text-lg border border-slate-200 rounded p-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Lĩnh vực -->
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 text-slate-500">
+                                            <i class="ph ph-briefcase text-lg"></i>
+                                            <span class="text-sm">Lĩnh vực</span>
+                                        </div>
+
+                                        <div class="edit-row flex items-center justify-between gap-3 pl-0 sm:pl-7 min-w-0">
+            <span data-field="industry"
+                  data-empty-text="Chưa cập nhật lĩnh vực"
+                  th:data-value="${company.industry != null ? company.industry : ''}"
+                  th:text="${company.industry != null and !company.industry.isEmpty() ? company.industry : 'Chưa cập nhật lĩnh vực'}"
+                  class="editable-target text-sm font-medium text-slate-800 min-w-0 break-words flex-1 rounded transition">
+            </span>
+                                            <button type="button"
+                                                    onclick="enableInlineEdit(this)"
+                                                    class="shrink-0 text-slate-400 hover:text-blue-600 transition-colors"
+                                                    aria-label="Chỉnh sửa lĩnh vực">
+                                                <i class="ph ph-pencil-simple text-lg border border-slate-200 rounded p-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Website -->
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 text-slate-500">
+                                            <i class="ph ph-globe text-lg"></i>
+                                            <span class="text-sm">Website</span>
+                                        </div>
+
+                                        <div class="edit-row flex items-center justify-between gap-3 pl-0 sm:pl-7 min-w-0">
+                                            <div class="min-w-0 flex-1">
+                                                <!-- Thẻ hiển thị và chỉnh sửa trực tiếp cho Website -->
+                                                <span data-field="website"
+                                                      data-is-link="true"
+                                                      data-empty-text="Chưa cập nhật website"
+                                                      th:data-value="${company.website != null ? company.website : ''}"
+                                                      class="editable-target text-sm font-medium min-w-0 break-all rounded transition inline-block">
+
+                    <a th:if="${company.website != null and !company.website.isEmpty()}"
+                       th:href="${company.website}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="text-blue-600 hover:underline inline-flex items-start gap-1">
+                        <span th:text="${company.website}"></span>
+                        <i class="ph ph-arrow-square-out shrink-0 mt-0.5"></i>
+                    </a>
+
+                    <span th:unless="${company.website != null and !company.website.isEmpty()}"
+                          class="text-slate-400 italic font-normal">Chưa cập nhật website</span>
+                </span>
+                                            </div>
+
+                                            <button type="button"
+                                                    onclick="enableInlineEdit(this)"
+                                                    class="shrink-0 text-slate-400 hover:text-blue-600 transition-colors"
+                                                    aria-label="Chỉnh sửa website">
+                                                <i class="ph ph-pencil-simple text-lg border border-slate-200 rounded p-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Địa chỉ -->
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 text-slate-500">
+                                            <i class="ph ph-map-pin text-lg"></i>
+                                            <span class="text-sm">Địa chỉ trụ sở chính</span>
+                                        </div>
+
+                                        <div class="edit-row flex items-center justify-between gap-3 pl-0 sm:pl-7 min-w-0">
+            <span data-field="address"
+                  data-empty-text="Chưa cập nhật địa chỉ"
+                  th:data-value="${company.address != null ? company.address : ''}"
+                  th:text="${company.address != null and !company.address.isEmpty() ? company.address : 'Chưa cập nhật địa chỉ'}"
+                  class="editable-target text-sm font-medium text-slate-800 leading-relaxed min-w-0 break-words flex-1 rounded transition">
+            </span>
+                                            <button type="button"
+                                                    onclick="enableInlineEdit(this)"
+                                                    class="shrink-0 text-slate-400 hover:text-blue-600 transition-colors"
+                                                    aria-label="Chỉnh sửa địa chỉ">
+                                                <i class="ph ph-pencil-simple text-lg border border-slate-200 rounded p-1"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bản đồ -->
+                                    <!-- Khung chứa Bản đồ dựa theo company.mapUrl -->
+                                    <div id="company-map-container" class="mt-2">
+                                        <div th:if="${company.mapUrl != null and !company.mapUrl.isEmpty()}"
+                                             class="w-full h-36 bg-slate-100 rounded-lg relative overflow-hidden border border-slate-200">
+                                            <iframe id="company-map-iframe"
+                                                    th:src="${company.mapUrl}"
+                                                    class="w-full h-full border-0"
+                                                    allowfullscreen=""
+                                                    loading="lazy"
+                                                    referrerpolicy="no-referrer-when-downgrade">
+                                            </iframe>
+                                        </div>
+                                        <div th:unless="${company.mapUrl != null and !company.mapUrl.isEmpty()}"
+                                             class="w-full h-32 bg-slate-800 rounded-lg relative overflow-hidden flex flex-col items-center justify-center group">
+                                            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=600&h=200"
+                                                 class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale"
+                                                 alt="Bản đồ vị trí công ty">
+
+                                            <i class="ph-fill ph-map-pin text-white text-2xl relative z-10 drop-shadow-md"></i>
+                                            <span class="text-[11px] text-slate-200 relative z-10 mt-1 font-medium">Chưa cập nhật bản đồ</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="lg:col-span-7 space-y-6">
+                            <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                                <h3 class="text-lg font-bold text-slate-800 mb-4">Giới thiệu chung</h3>
+                                <div class="border border-slate-200 rounded-lg overflow-hidden relative group bg-white">
+                                    <div class="flex items-center justify-end bg-slate-50 border-b border-slate-200 p-1.5">
+                                        <button type="button"
+                                                onclick="enableInlineEdit(this)"
+                                                class="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-md text-xs font-medium transition"
+                                                title="Chỉnh sửa mô tả">
+                                            <i class="ph ph-pencil-simple text-[14px]"></i>
+                                            <span>Chỉnh sửa</span>
+                                        </button>
+                                    </div>
+                                    <div data-field="description"
+                                         data-multiline="true"
+                                         data-empty-text="Chưa có thông tin giới thiệu công ty."
+                                         th:data-value="${company.description != null ? company.description : ''}"
+                                         th:text="${company.description != null and !company.description.isEmpty() ? company.description : 'Chưa có thông tin giới thiệu công ty.'}"
+                                         class="editable-target p-4 text-sm text-slate-700 leading-relaxed min-h-[100px] whitespace-pre-line transition">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                                <!-- Header -->
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-slate-800">Môi trường & Phúc lợi</h3>
+                                    <button type="button"
+                                            onclick="document.getElementById('benefits-form').classList.toggle('hidden'); document.getElementById('benefits-view').classList.toggle('hidden');"
+                                            class="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 rounded-md text-xs font-medium border border-slate-200/80 transition">
+                                        <i class="ph ph-pencil-simple text-[14px]"></i>
+                                        <span>Chỉnh sửa</span>
+                                    </button>
+                                </div>
+                                <div id="benefits-view">
+                                    <div th:if="${company.benefits != null and !company.benefits.isEmpty()}"
+                                         class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div th:each="benefit, iterStat : ${company.benefits}"
+                                             class="flex items-center gap-3">
+                                            <th:block th:switch="${iterStat.index % 4}">
+                                                <div th:case="0"
+                                                     class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-500 shrink-0">
+                                                    <i class="ph-fill ph-heart"></i></div>
+                                                <div th:case="1"
+                                                     class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 shrink-0">
+                                                    <i class="ph-fill ph-shield-check"></i></div>
+                                                <div th:case="2"
+                                                     class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 shrink-0">
+                                                    <i class="ph-fill ph-airplane-tilt"></i></div>
+                                                <div th:case="3"
+                                                     class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 shrink-0">
+                                                    <i class="ph-fill ph-chart-line-up"></i></div>
+                                            </th:block>
+                                            <span th:text="${benefit}"
+                                                  class="text-sm font-medium text-slate-700 break-words"></span>
+                                        </div>
+                                    </div>
+                                    <div th:unless="${company.benefits != null and !company.benefits.isEmpty()}"
+                                         class="text-sm text-slate-400 italic py-2">
+                                        Chưa cập nhật thông tin môi trường & phúc lợi.
+                                    </div>
+                                </div>
+                                <div id="benefits-form" class="hidden space-y-3">
+                                    <p class="text-xs text-slate-500">Nhập mỗi phúc lợi trên 1 dòng (Enter để xuống
+                                        dòng):</p>
+                                    <textarea id="benefits-textarea" rows="4"
+                                              class="w-full text-sm text-slate-800 border border-slate-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                              placeholder="Giờ làm việc linh hoạt&#10;Bảo hiểm sức khỏe cao cấp"
+                                              th:text="${company.benefits != null ? #strings.listJoin(company.benefits, '&#10;') : ''}"></textarea>
+
+                                    <div class="flex justify-end gap-2">
+                                        <button type="button" onclick="saveBenefitsSimple()"
+                                                class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition">
+                                            Lưu thay đổi
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                                <h3 class="text-lg font-bold text-slate-800 mb-4">Nhân sự chủ chốt</h3>
+                                <div class="flex gap-6">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://ui-avatars.com/api/?name=C+E+O&background=random" alt="CEO"
+                                             class="w-12 h-12 rounded-full border border-slate-200">
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-800">CEO</div>
+                                            <div class="text-xs text-slate-500">Innovat Tech Vietnam</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://ui-avatars.com/api/?name=F+O+U&background=random"
+                                             alt="Founder"
+                                             class="w-12 h-12 rounded-full border border-slate-200">
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-800">Founder</div>
+                                            <div class="text-xs text-slate-500">Innovate Tech Vietnam</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script th:src="@{/js/InfoCompany.js}"></script>
+</div>
+
+</body>
+</html>

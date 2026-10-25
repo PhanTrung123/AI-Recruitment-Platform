@@ -70,11 +70,11 @@
 
                                 <!-- 2. Tên Job (Giới hạn độ rộng, quá dài sẽ hiện ... và di chuột vào sẽ thấy full tên) -->
                                 <td class="p-3.5 font-semibold text-slate-900 max-w-[200px] sm:max-w-[240px]">
-                                    <div class="truncate" th:text="${job.jobName}" th:title="${job.jobName}"></div>
+                                    <div th:text="${job.jobName}" th:title="${job.jobName}"></div>
                                 </td>
 
                                 <!-- 3. Địa chỉ (Giới hạn độ rộng + dấu ...) -->
-                                <td class="p-3.5 text-slate-600 max-w-[160px] sm:max-w-[200px]">
+                                <td class="p-3.5 text-slate-600 ">
                                     <div class="truncate" th:text="${job.address}" th:title="${job.address}"></div>
                                 </td>
 

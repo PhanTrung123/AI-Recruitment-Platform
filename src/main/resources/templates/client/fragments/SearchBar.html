@@ -7,54 +7,55 @@
 <body>
 <div th:fragment="searchBar">
     <!-- Search -->
-    <div
-            class="grid grid-cols-12 items-center gap-3 w-full text-gray-800"
-    >
-        <!-- City -->
-        <div class="relative col-span-2 max-xl:col-span-12">
-            <i
-                    class="ph ph-map-pin absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none"
-            ></i>
-
-            <select
-                    name="city"
-                    class="w-full rounded-[4px] appearance-none bg-white px-4 pl-11 pr-10 py-3.5 md:py-4 text-md text-gray-900 font-[500] border border-gray-300 outline-none cursor-pointer focus:border-blue-400"
-            >
-                <option value="">All Cities</option>
-                <option th:each="city : ${cities}" th:value="${city.name()}" th:text="${city.displayName}"></option>
-            </select>
-
-            <i
-                    class="ph ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-            ></i>
-        </div>
-
-        <!-- Input -->
+    <form th:action="@{/search-job}" method="get">
         <div
-                class="col-span-8 max-xl:col-span-9 w-full bg-white text-md text-gray-900 font-medium rounded-[4px] overflow-hidden"
+                class="grid grid-cols-12 items-center gap-3 w-full text-gray-800"
         >
-            <div class="px-4 py-3.5 md:py-4 flex items-center">
-                <input
-                        type="text"
-                        placeholder="Enter keyword skill (Java, iOS...), job title, company..."
-                        class="w-full outline-none text-[15px] placeholder-gray-500 text-gray-800 bg-transparent"
-                />
+            <!-- City -->
+            <div class="relative col-span-2 max-xl:col-span-12">
+                <i
+                        class="ph ph-map-pin absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none"
+                ></i>
+
+                <select
+                        name="city"
+                        class="w-full rounded-[4px] appearance-none bg-white px-4 pl-11 pr-10 py-3.5 md:py-4 text-md text-gray-900 font-[500] border border-gray-300 outline-none cursor-pointer focus:border-blue-400"
+                >
+                    <option value="">All Cities</option>
+                    <option th:each="city : ${cities}" th:value="${city.name()}" th:text="${city.displayName}"></option>
+                </select>
+
+                <i
+                        class="ph ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                ></i>
+            </div>
+
+            <!-- Input -->
+            <div
+                    class="col-span-8 max-xl:col-span-9 w-full bg-white text-md text-gray-900 font-medium rounded-[4px] overflow-hidden"
+            >
+                <div class="px-4 py-3.5 md:py-4 flex items-center">
+                    <input
+                            type="text"
+                            name="keyword"
+                            placeholder="Enter keyword skill (Java, iOS...), job title, company..."
+                            class="w-full outline-none text-[15px] placeholder-gray-500 text-gray-800 bg-transparent"
+                    />
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="col-span-2 max-xl:col-span-3 h-full text-md text-gray-900 font-[500]">
+                <button
+                        type="submit"
+                        class="w-full rounded-[4px] h-full min-h-[52px] bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2 transition-colors"
+                >
+                    <i class="ph ph-magnifying-glass text-lg"></i>
+                    <span class="max-xl:hidden">Search</span>
+                </button>
             </div>
         </div>
-
-        <!-- Search -->
-        <a th:href="@{/search-job}"
-           class="col-span-2 max-xl:col-span-3 h-full text-md text-gray-900 font-[500]"
-        >
-            <button
-                    type="button"
-                    class="w-full rounded-[4px] h-full min-h-[52px] bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2 transition-colors"
-            >
-                <i class="ph ph-magnifying-glass text-lg"></i>
-                <span class="max-xl:hidden">Search</span>
-            </button>
-        </a>
-    </div>
+    </form>
 </div>
 </body>
 </html>

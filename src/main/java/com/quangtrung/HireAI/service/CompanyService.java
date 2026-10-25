@@ -1,6 +1,7 @@
 package com.quangtrung.HireAI.service;
 
 import com.quangtrung.HireAI.dto.CompanyDTO;
+import com.quangtrung.HireAI.dto.CompanyWithSkillsDTO;
 import com.quangtrung.HireAI.entity.Company;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,10 @@ public interface CompanyService {
     void deleteById(Long id);
 
     public Company findByUserId(Long userId);
+
+    CompanyDTO getCompanyByRecruiterId(Long userId);
+
+    boolean updateCompanyField(Long userId, String field, String value);
+
+    List<CompanyWithSkillsDTO> getTopHiringCompanies();
 }

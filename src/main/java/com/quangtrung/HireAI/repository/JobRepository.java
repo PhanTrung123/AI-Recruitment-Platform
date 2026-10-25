@@ -50,4 +50,20 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     // Đếm số lượng bản ghi MyJob theo job_id của bảng Job
     @Query("SELECT COUNT(mj) FROM MyJob mj WHERE mj.job.job_id = :jobId")
     long countByJobId(@Param("jobId") Long jobId);
+
+    @Query("""
+        SELECT DISTINCT j FROM Job j
+        LEFT JOIN FETCH j.company
+        LEFT JOIN FETCH j.expertise
+        LEFT JOIN FETCH j.title
+        WHERE (:keyword IS NULL OR :keyword = '' OR
+               LOWER(j.jobName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+               LOWER(j.company.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+               LOWER(j.expertise.expertiseName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+               LOWER(j.title.titleName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+               EXISTS (SELECT 1 FROM j.skillJobs sj2 WHERE LOWER(sj2.skill.skillName) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR
+               EXISTS (SELECT 1 FROM j.jobDomains jd2 WHERE LOWER(jd2.domain.domainName) LIKE LOWER(CONCAT('%', :keyword, '%'))))
+        AND (:city IS NULL OR j.city = :city)
+        """)
+    List<Job> searchJobs(@Param("keyword") String keyword, @Param("city") com.quangtrung.HireAI.enums.City city);
 }

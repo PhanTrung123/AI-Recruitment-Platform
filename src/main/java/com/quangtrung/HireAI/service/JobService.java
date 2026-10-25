@@ -1,5 +1,6 @@
 package com.quangtrung.HireAI.service;
 
+import com.quangtrung.HireAI.dto.ApplicationDTO;
 import com.quangtrung.HireAI.dto.JobDTO;
 import com.quangtrung.HireAI.entity.Job;
 import com.quangtrung.HireAI.enums.City;
@@ -24,6 +25,8 @@ public interface JobService {
 
     void deleteById(Long id);
 
+    List<Job> searchJobs(String keyword, City city);
+
     java.util.List<Job> findByJobDomain(Long domainId);
 
     List<Job> findByCompanyId(Long companyId);
@@ -41,4 +44,9 @@ public interface JobService {
     List<JobDTO> getJobsByUserId(Long userId);
 
     void deleteJobCompletely(Long jobId);
+
+    List<ApplicationDTO> getApplicationsByRecruiter(Long recruiterUserId, String status, String keyword);
+
+    public void updateApplicationStatus(Long myJobId, String status);
+
 }

@@ -1,7 +1,10 @@
 package com.quangtrung.HireAI.service.impl;
 
+import com.quangtrung.HireAI.dto.ApplicationDTO;
 import com.quangtrung.HireAI.dto.JobDTO;
 import com.quangtrung.HireAI.entity.Job;
+import com.quangtrung.HireAI.entity.MyJob;
+import com.quangtrung.HireAI.enums.City;
 import com.quangtrung.HireAI.repository.JobDomainRepository;
 import com.quangtrung.HireAI.repository.JobRepository;
 import com.quangtrung.HireAI.repository.MyJobRepository;
@@ -69,6 +72,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<Job> searchJobs(String keyword, City city) {
+        return jobRepository.searchJobs(keyword, city);
+    }
+
+    @Override
     public List<Job> findByJobDomain(Long domainId) {
         return jobRepository.findByJobDomains(domainId);
     }
@@ -131,5 +139,46 @@ public class JobServiceImpl implements JobService {
         jobRepository.deleteById(jobId);
     }
 
+    @Override
+    public List<ApplicationDTO> getApplicationsByRecruiter(Long recruiterUserId, String status, String keyword) {
+        List<MyJob> myJobs;
+        if (status != null && !status.isEmpty()) {
+            myJobs = myJobRepository.filterByStatus(recruiterUserId, status);
+        } else if (keyword != null && !keyword.isEmpty()) {
+            myJobs = myJobRepository.searchByKeyword(recruiterUserId, keyword);
+        } else {
+            myJobs = myJobRepository.findApplicationsByRecruiterId(recruiterUserId);
+        }
+        return myJobs.stream().map(mj -> {
+            ApplicationDTO dto = new ApplicationDTO();
 
+            dto.setMyjob_id(mj.getMyJob_id());
+            dto.setAppliedAt(mj.getAppliedAt());
+            dto.setStatus(mj.getStatus());
+
+            if (mj.getJob() != null) {
+                dto.setJob_id(mj.getJob().getJob_id());
+                dto.setJobName(mj.getJob().getJobName());
+            }
+
+            if (mj.getCv() != null) {
+                dto.setCvFileUrl(mj.getCv().getFileUrl());
+
+                if (mj.getCv().getUser() != null) {
+                    dto.setCandidateName(mj.getCv().getUser().getUserName());
+                    dto.setCandidateEmail(mj.getCv().getUser().getEmail());
+                    dto.setCandidateAvatar(mj.getCv().getUser().getAvatar());
+                }
+            }
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateApplicationStatus(Long myJobId, String status) {
+        MyJob myJob = myJobRepository.findById(myJobId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn ứng tuyển"));
+        myJob.setStatus(status);
+        myJobRepository.save(myJob);
+    }
 }

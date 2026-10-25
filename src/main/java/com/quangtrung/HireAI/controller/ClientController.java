@@ -90,6 +90,21 @@ public class ClientController {
                 .toList();
     }
 
+    @ModelAttribute("featuredSkills")
+    public List<SkillDTO> getFeaturedSkills() {
+        List<SkillDTO> allSkills = skillService.findAll().stream().map(item -> {
+            SkillDTO dto = new SkillDTO();
+            BeanUtils.copyProperties(item, dto);
+            return dto;
+        }).toList();
+        return allSkills.stream().limit(8).toList();
+    }
+
+    @ModelAttribute("topHiringCompanies")
+    public List<CompanyWithSkillsDTO> getTopHiringCompanies() {
+        return companyService.getTopHiringCompanies();
+    }
+
     @RequestMapping("/")
     public String showHome(Model model) {
         return "client/layout/Home";

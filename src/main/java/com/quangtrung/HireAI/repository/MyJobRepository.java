@@ -26,4 +26,24 @@ public interface MyJobRepository extends JpaRepository<MyJob, Long> {
     @Transactional
     @Query("DELETE FROM MyJob mj WHERE mj.job.job_id = :jobId")
     void deleteByJobId(@Param("jobId") Long jobId);
+
+    @Query("SELECT mj FROM MyJob mj " +
+            "JOIN FETCH mj.cv c " +
+            "JOIN FETCH c.user u " +
+            "JOIN FETCH mj.job j " +
+            "WHERE j.company.user.id = :recruiterUserId " +
+            "ORDER BY mj.appliedAt DESC")
+    List<MyJob> findApplicationsByRecruiterId(@Param("recruiterUserId") Long recruiterUserId);
+
+    @Query("SELECT mj FROM MyJob mj " +
+            "JOIN FETCH mj.cv c JOIN FETCH c.user u JOIN FETCH mj.job j " +
+            "WHERE j.company.user.id = :recruiterId AND mj.status = :status " +
+            "ORDER BY mj.appliedAt DESC")
+    List<MyJob> filterByStatus(@Param("recruiterId") Long recruiterId, @Param("status") String status);
+
+    @Query("SELECT mj FROM MyJob mj " +
+            "JOIN FETCH mj.cv c JOIN FETCH c.user u JOIN FETCH mj.job j " +
+            "WHERE j.company.user.id = :recruiterId AND LOWER(u.userName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "ORDER BY mj.appliedAt DESC")
+    List<MyJob> searchByKeyword(@Param("recruiterId") Long recruiterId, @Param("keyword") String keyword);
 }

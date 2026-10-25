@@ -6,6 +6,8 @@ import com.quangtrung.HireAI.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("employer/dashboard")
@@ -89,7 +92,10 @@ public class ProfileRecruiterController {
     }
 
     @GetMapping({"", "/{section}"})
-    public String dashboard(@PathVariable(required = false) String section, Model model, HttpSession session, @RequestParam(required = false) Boolean create) {
+    public String dashboard(@PathVariable(required = false) String section, Model model, HttpSession session,
+                            @RequestParam(required = false) Boolean create,
+                            @RequestParam(value = "keyword", required = false) String keyword,
+                            @RequestParam(value = "status", required = false) String status) {
         String activeItem = resolveActiveItem(section);
         model.addAttribute("activeItem", activeItem);
         model.addAttribute("pageTitle", resolvePageTitle(activeItem));
@@ -108,6 +114,24 @@ public class ProfileRecruiterController {
                 model.addAttribute("showModal", true);
             }
             return "recruiter/dashboard/JobOpening";
+        }
+        if ("applicants".equals(activeItem)) {
+            Long recruiterId = sessionUser.getId();
+            List<ApplicationDTO> applications = jobService.getApplicationsByRecruiter(recruiterId, status, keyword);
+            model.addAttribute("applications", applications);
+            model.addAttribute("currentKeyword", keyword);
+            model.addAttribute("currentStatus", status);
+            List<JobDTO> jobs = jobService.getJobsByUserId(recruiterId);
+            model.addAttribute("jobs", jobs);
+
+            return "recruiter/dashboard/Applicants";
+        }
+        if ("company-profile".equals(activeItem)) {
+            Long recruiterId = sessionUser.getId();
+            CompanyDTO company = companyService.getCompanyByRecruiterId(recruiterId);
+            model.addAttribute("company", company);
+
+            return "recruiter/dashboard/InfoCompany";
         }
         return "recruiter/dashboard/EmpDashboard";
     }
@@ -224,6 +248,40 @@ public class ProfileRecruiterController {
         return "redirect:/employer/dashboard/job-openings";
     }
 
+    @PostMapping("/applicants/update-status")
+    public String updateApplicationStatus(@RequestParam("myJobId") Long myJobId,
+                                          @RequestParam("status") String status,
+                                          RedirectAttributes redirectAttributes) {
+        try {
+            jobService.updateApplicationStatus(myJobId, status);
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật trạng thái ứng viên thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi cập nhật trạng thái!");
+        }
+        return "redirect:/employer/dashboard/applicants";
+    }
+
+    @PostMapping("/applicants/company-profile/update-field")
+    @ResponseBody
+    public ResponseEntity<?> updateCompanyField(
+            @RequestParam("field") String field,
+            @RequestParam("value") String value,
+            HttpSession session) {
+
+        // SỬA DÒNG NÀY: Đổi User thành SessionUserDTO
+        SessionUserDTO sessionUser = (SessionUserDTO) session.getAttribute("account");
+
+        if (sessionUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Vui lòng đăng nhập để tiếp tục");
+        }
+
+        boolean success = companyService.updateCompanyField(sessionUser.getId(), field, value);
+        if (success) {
+            return ResponseEntity.ok(Map.of("status", "success", "value", value));
+        } else {
+            return ResponseEntity.badRequest().body("Dữ liệu không hợp lệ hoặc lỗi cập nhật");
+        }
+    }
 
     private String resolveActiveItem(String section) {
         if (section == null || section.isBlank() || "overview".equals(section)) {

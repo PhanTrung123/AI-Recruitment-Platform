@@ -96,135 +96,11 @@
             Top Employers
         </h3>
         <div class="grid grid-cols-3 max-xl:grid-cols-2 max-md:grid-cols-1 gap-6">
-            <div
-                    class="relative overflow-hidden bg-[#fcfcfc] rounded-xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+            <div th:each="company : ${topHiringCompanies}"
+                 class="relative overflow-hidden bg-[#fcfcfc] rounded-xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
             >
-                <div class="p-6 flex flex-col items-center">
-                    <div
-                            class="w-40 h-40 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center mb-4"
-                    >
-                        <img
-                                src="./logo.png"
-                                alt="MiTek Vietnam"
-                                class="max-h-full max-w-full object-contain"
-                        />
-                    </div>
-
-                    <h4 class="font-bold text-gray-900 text-base mb-4 text-center">
-                        MiTek Vietnam
-                    </h4>
-
-                    <div class="flex flex-wrap justify-center gap-2">
-              <span
-                      class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-              >C#</span
-              >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >.NET</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >JavaScript</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >Cybersecurity</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >TestComplete</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >Azure</span
-                        >
-                    </div>
-                </div>
-
-                <div
-                        class="bg-gray-50/80 border-t border-gray-100 p-5 flex items-center justify-between text-xs text-gray-600"
-                >
-                    <span>Ho Chi Minh</span>
-                    <a
-                            href="#"
-                            class="font-bold text-gray-800 hover:text-red-600 flex items-center gap-1.5 transition-colors"
-                    >
-              <span
-                      class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
-              ></span>
-                        9 Jobs <i class="ph ph-caret-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div
-                    class="relative overflow-hidden bg-[#fcfcfc] rounded-xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
-            >
-                <div class="p-6 flex flex-col items-center">
-                    <div
-                            class="w-40 h-40 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center mb-4"
-                    >
-                        <img
-                                src="./logo.png"
-                                alt="BIDV Securities Company (BSC)"
-                                class="max-h-full max-w-full object-contain"
-                        />
-                    </div>
-
-                    <h4 class="font-bold text-gray-900 text-base mb-4 text-center">
-                        BIDV Securities Company (BSC)
-                    </h4>
-
-                    <div class="flex flex-wrap justify-center gap-2">
-              <span
-                      class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-              >JavaScript</span
-              >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >Java</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >.NET</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >Database</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >Business Analysis</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >QA QC</span
-                        >
-                    </div>
-                </div>
-
-                <div
-                        class="bg-gray-50/80 border-t border-gray-100 p-5 flex items-center justify-between text-xs text-gray-600"
-                >
-                    <span>Ha Noi - Ho Chi Minh</span>
-                    <a
-                            href="#"
-                            class="font-bold text-gray-800 hover:text-red-600 flex items-center gap-1.5 transition-colors"
-                    >
-              <span
-                      class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
-              ></span>
-                        3 Jobs <i class="ph ph-caret-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <div
-                    class="relative overflow-hidden bg-[#fcfcfc] rounded-xl border border-gray-200/80 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
-            >
-                <div
-                        class="absolute top-0 right-0 w-28 h-28 overflow-hidden pointer-events-none"
+                <div th:if="${company.isTopHiring}"
+                     class="absolute top-0 right-0 w-28 h-28 overflow-hidden pointer-events-none"
                 >
                     <div
                             class="absolute top-5 -right-9 w-36 rotate-45 bg-orange-500 text-white text-[9px] font-bold py-1 text-center shadow-sm uppercase tracking-wider flex items-center justify-center gap-1"
@@ -238,57 +114,42 @@
                             class="w-40 h-40 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center mb-4"
                     >
                         <img
-                                src="./logo.png"
-                                alt="MB Bank"
+                                th:src="${company.logo != null and !company.logo.isEmpty() ? company.logo : '/images/default-company.png'}"
+                                th:alt="${company.name}"
                                 class="max-h-full max-w-full object-contain"
                         />
                     </div>
 
-                    <h4 class="font-bold text-gray-900 text-base mb-4 text-center">
-                        MB Bank
+                    <h4 class="font-bold text-gray-900 text-base mb-4 text-center"
+                        th:text="${company.name}">
+                        Company Name
                     </h4>
 
                     <div class="flex flex-wrap justify-center gap-2">
-              <span
-                      class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-              >Java</span
-              >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >JavaScript</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >Python</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >Oracle</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >AngularJS</span
-                        >
-                        <span
-                                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
-                        >ReactJS</span
-                        >
+                        <span th:each="skill : ${company.topSkills}"
+                              class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
+                              th:text="${skill}">
+                            Skill
+                        </span>
                     </div>
                 </div>
 
-                <div
-                        class="bg-gray-50/80 border-t border-gray-100 p-5 flex items-center justify-between text-xs text-gray-600"
-                >
-                    <span>Ha Noi</span>
-                    <a
-                            href="#"
-                            class="font-bold text-gray-800 hover:text-red-600 flex items-center gap-1.5 transition-colors"
-                    >
-              <span
-                      class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
-              ></span>
-                        25 Jobs <i class="ph ph-caret-right"></i>
+                <div class="bg-gray-50/80 border-t border-gray-100 px-5 py-4 flex items-center justify-between gap-4 text-xs text-gray-600">
+                    <div class="flex items-center gap-1.5 min-w-0 flex-1"
+                         th:title="${company.address != null and !company.address.isEmpty() ? company.address : 'Vietnam'}">
+                        <i class="ph ph-map-pin text-gray-400 text-sm shrink-0"></i>
+                        <span class="truncate font-medium text-gray-500"
+                              th:text="${company.address != null and !company.address.isEmpty() ? company.address : 'Vietnam'}">
+            Location
+        </span>
+                    </div>
+                    <a th:href="@{/companies/{id}(id=${company.company_id})}"
+                       class="group/link shrink-0 whitespace-nowrap font-bold text-gray-800 hover:text-red-600 flex items-center gap-1.5 transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 shadow-[0_0_6px_rgba(16,185,129,0.6)]"></span>
+                        <span th:text="${(company.jobCount != null ? company.jobCount : 0) + ' Jobs'}">0 Jobs</span>
+                        <i class="ph-bold ph-caret-right text-gray-400 group-hover/link:text-red-600 group-hover/link:translate-x-0.5 transition-all"></i>
                     </a>
+
                 </div>
             </div>
         </div>
