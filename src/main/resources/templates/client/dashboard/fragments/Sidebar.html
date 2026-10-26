@@ -79,14 +79,14 @@
             <span th:text="${session.account.role.name() == 'USER'} ? 'Việc làm của tôi' : 'Tin tuyển dụng'">Việc làm của tôi</span>
         </a>
 
-        <!-- 5. Lời mời công việc / Lời mời ứng tuyển -->
-        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/job-invitations} : @{/employer/dashboard/invitations}"
-           class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"
-           th:classappend="${(session.account.role.name() == 'USER' and activeItem == 'job-invitations') or (session.account.role.name() == 'RECRUITER' and activeItem == 'invitations')} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">
-            <i class="ph ph-handshake text-[22px]"></i>
-            <span th:text="${session.account.role.name() == 'USER'} ? 'Lời mời công việc' : 'Lời mời đã gửi'">Lời mời công việc</span>
-            <span class="ml-auto rounded-full bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5">0</span>
-        </a>
+        <!--        &lt;!&ndash; 5. Lời mời công việc / Lời mời ứng tuyển &ndash;&gt;-->
+        <!--        <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/job-invitations} : @{/employer/dashboard/invitations}"-->
+        <!--           class="flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-medium transition"-->
+        <!--           th:classappend="${(session.account.role.name() == 'USER' and activeItem == 'job-invitations') or (session.account.role.name() == 'RECRUITER' and activeItem == 'invitations')} ? 'bg-[#f9e7e7] text-red-500 border border-[#f3d0d0]' : 'text-gray-700 hover:bg-gray-50'">-->
+        <!--            <i class="ph ph-handshake text-[22px]"></i>-->
+        <!--            <span th:text="${session.account.role.name() == 'USER'} ? 'Lời mời công việc' : 'Lời mời đã gửi'">Lời mời công việc</span>-->
+        <!--            <span class="ml-auto rounded-full bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5">0</span>-->
+        <!--        </a>-->
 
         <!-- 6. Đăng ký nhận email / Gói dịch vụ -->
         <a th:href="${session.account.role.name() == 'USER'} ? @{/dashboard/email-subscriptions} : @{/employer/dashboard/subscriptions}"

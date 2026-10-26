@@ -149,6 +149,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     @Transactional
     public void updateProfile(Long id, UserDTO userDTO, MultipartFile avatarFile, boolean deleteAvatar) {
         Optional<User> opt = userRepository.findById(id);

@@ -9,6 +9,7 @@ import com.quangtrung.HireAI.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -76,6 +77,7 @@ public class AuthController {
     @GetMapping("/logout")
     public ModelAndView logout() {
         session.invalidate();
+        SecurityContextHolder.clearContext();
         return new ModelAndView("redirect:/");
     }
 
@@ -90,5 +92,10 @@ public class AuthController {
         }
         userService.save(accountDTO);
         return new ModelAndView("redirect:/login");
+    }
+
+    @GetMapping("/403")
+    public String accessDenied() {
+        return "admin/auth/403";
     }
 }

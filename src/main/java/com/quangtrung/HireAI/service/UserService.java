@@ -35,8 +35,14 @@ public interface UserService {
 
     Optional<User> findByUserName(String userName);
 
+    Optional<User> findByEmail(String email);
+
     default User findByUsername(String username) {
         return findByUserName(username).orElse(null);
+    }
+
+    default User findUserByEmail(String email) {
+        return findByEmail(email).orElse(null);
     }
 
     void updateProfile(Long id, UserDTO userDTO, MultipartFile avatarFile, boolean deleteAvatar);
